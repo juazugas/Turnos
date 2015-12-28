@@ -1,0 +1,16 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">1dp</dimen>
+    <dimen name="activity_vertical_margin">1dp</dimen>
+
+    <dimen name="shift_cal_size">64dp</dimen>
+
+    <dimen name="elevation_high">4dp</dimen>
+    <dimen name="elevation_low">2dp</dimen>
+
+    <dimen name="card_margin_layout">2dp</dimen>
+
+
+    <dimen name="card_contact_image_width">92dp</dimen>
+    <dimen name="card_contact_image_height">100dp</dimen>
+</resources>

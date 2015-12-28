@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/card_margin_layout"
+    card_view:cardCornerRadius="0dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         >
+
+        <TextView
+            android:id="@+id/textSprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/sa_green_semitrans"
+            android:gravity="center_vertical|right"
+            android:padding="2dp"
+            android:text="Sprint #1"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:padding="2dp"
+            android:text="Week 1"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <Button
+            android:id="@+id/textStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textSprint"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp"
+            android:padding="6dp"
+            android:minWidth="@dimen/shift_cal_size"
+            android:minHeight="@dimen/shift_cal_size"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="29-11-2014"
+            android:singleLine="false"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/colorForegroundInverse"
+            android:background="@drawable/oval_ripple"
+            tools:text="29\nnov.\n2014"
+            android:elevation="@dimen/elevation_low"
+            android:stateListAnimator="@anim/button_elevation"/>
+
+        <TextView
+            android:text="MX1    +    MX2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textSprint"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="18dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/tertiary_text_dark"
+            android:alpha=".6"
+            />
+
+        <TextView
+            android:id="@+id/textImasdMx1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textSprint"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:text="rtribaldos"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/colorForeground"
+            tools:text="jcañadillas" />
+
+        <TextView
+            android:id="@+id/textImasdMx2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textImasdMx1"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:paddingStart="96dp"
+            android:text="rtribaldos"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/colorForeground"
+            tools:text="rtribaldos" />
+
+        <TextView
+            android:id="@+id/textPairing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textImasdMx2"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Pairing: 1" />
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
