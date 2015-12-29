@@ -1,5 +1,7 @@
 package com.defimak47.turnos.view;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import com.defimak47.turnos.R;
 import com.defimak47.turnos.adapter.ShiftAdapter;
 import com.defimak47.turnos.helpers.ShiftHelper;
 import com.defimak47.turnos.model.Shift;
+import com.defimak47.turnos.sync.TurnosSyncAdapter;
 import com.defimak47.turnos.utils.IOUtils;
 
 import java.io.File;
@@ -50,6 +53,7 @@ public class ShiftActivity extends AppCompatActivity
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
             getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shift);
 
@@ -100,6 +104,8 @@ public class ShiftActivity extends AppCompatActivity
         } else {
             scrollToShift();
         }
+
+        TurnosSyncAdapter.initializeSyncAdapter(this);
     }
 
     private String getIntentExtraSearch () {
@@ -242,4 +248,5 @@ public class ShiftActivity extends AppCompatActivity
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
 }

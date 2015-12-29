@@ -28,8 +28,9 @@ import com.defimak47.turnos.utils.IOUtils;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.json.JSONException;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -164,7 +165,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initContacts () {
         contacts = new ArrayList<>();
-        initOnlineStuffResource();
+        // initOnlineStuffResource();
         InputStream in = null; //
         try {
             in = getStuffRawResourceInputStream();
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity
                 contacts.add(stuffrecord);
             }
             in.close();
-        } catch (IOException io ) {
+        } catch (JSONException|IOException io ) {
             Log.e("MainActivity", "initContacts " + io.getMessage(), io);
         } finally {
         }

@@ -8,6 +8,8 @@ import com.defimak47.turnos.model.StuffInfo;
 import com.defimak47.turnos.model.StuffRecord;
 import com.defimak47.turnos.utils.IsoDate;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,6 +22,9 @@ import java.util.List;
  */
 public class StuffInfoHelper {
 
+
+    public static final String HTTP_STATIC_STUFF_URL = "https://spreadsheets.google.com/feeds/list/1D_7igYenGDjG-_nhh1miPuKRvVeR5-BpQxQR9YE6O-A/o39u79f/public/full?alt=json";
+    public static final String CONTACT_FILE_NAME = "stuff.json";
     public static final String HTTP_IMAGE_URI_TEMPLATE = "http://www.edicomgroup.com/dms/team/%s.jpg";
     public static final String MAIL_EDICOMGROUP_TEMPLATE = "%s@edicomgroup.com";
 
@@ -40,7 +45,7 @@ public class StuffInfoHelper {
     public static final String JSON_ATOM_ENTRY_NAME_KEY = "gsx$name";
     public static final String JSON_ATOM_ENTRY_POSITION_KEY = "gsx$position";
 
-    public StuffInfo readStuffInfo (InputStream in) throws IOException {
+    public StuffInfo readStuffInfo (InputStream in) throws JSONException, IOException {
         StuffInfo stuffinfo = new StuffInfo();
         if (null==in) {
             return stuffinfo;
@@ -48,8 +53,8 @@ public class StuffInfoHelper {
         JsonReader reader = new JsonReader(new InputStreamReader(in));
         try {
             stuffinfo = readStuffInfo(reader);
-        } catch (Exception io) {
-            Log.w("ContactInfoHelper", "readStuffInfo  " + io.getMessage(), io);
+        // } catch (Exception io) {
+        //    Log.w("ContactInfoHelper", "readStuffInfo  " + io.getMessage(), io);
         } finally {
             reader.close();
         }

@@ -8,4 +8,19 @@
     <string name="action_team">Team</string>
     <string name="title_activity_shift">Mex shifts</string>
 
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">turnos.example.com</string>
+    <string name="content_authority">com.defimak47.turnos</string>
+
+    <!-- Location Status -->
+    <string name="pref_location_status_key">location_status</string>
+
+    <!-- Empty Shifts Database -->
+    <string name="empty_stuff_list">No stuff Information Available</string>
+    <string name="empty_shifts_list">No shifts Information Available</string>
+    <string name="empty_stuff_list_no_network">No stuff information available. The network is not available to fetch team data.</string>
+    <string name="empty_stuff_list_server_down">No stuff information available. The server is not returning data.</string>
+    <string name="empty_stuff_list_server_error">No stuff information available. The server is not returning valid data. Please check for an updated version of Mex Shifts.</string>
+    <string name="empty_stuff_list_invalid_sheet">No stuff information available. The location in settings is not recognized by the team server.</string>
+
 </resources>
