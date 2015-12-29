@@ -21,9 +21,12 @@ import com.defimak47.turnos.R;
 import com.defimak47.turnos.adapter.ShiftAdapter;
 import com.defimak47.turnos.helpers.ShiftHelper;
 import com.defimak47.turnos.model.Shift;
+import com.defimak47.turnos.utils.IOUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -33,6 +36,7 @@ public class ShiftActivity extends AppCompatActivity
                         implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     public static final String EXTRA_SEARCH = "__com_defimak47_turnos_extra_searh__";
+    private static final String SHIFT_FILE_NAME = "turnos.json";
 
     private List<Shift> shifts;
 
@@ -182,7 +186,7 @@ public class ShiftActivity extends AppCompatActivity
     private void initShifts() {
         ShiftHelper helper = new ShiftHelper();
         try {
-            InputStream in = getResources().openRawResource(R.raw.turnos);
+            InputStream in = getShiftResource();
             shifts = helper.readShiftArray(in);
             in.close();
         } catch (IOException io) {
@@ -193,13 +197,34 @@ public class ShiftActivity extends AppCompatActivity
         }
     }
 
+    private InputStream getShiftResource() throws IOException {
+        if (!internalFileExists(SHIFT_FILE_NAME)) {
+            InputStream origin = getResources().openRawResource(R.raw.turnos);
+            OutputStream targout = openFileOutput(SHIFT_FILE_NAME, Context.MODE_PRIVATE);
+            IOUtils.copy(origin, targout);
+            origin.close();
+            targout.close();
+        }
+        return openFileInput(SHIFT_FILE_NAME);
+    }
+
+    private boolean internalFileExists(String shiftFileName) {
+        File file = getFileStreamPath(shiftFileName);
+        return file.exists();
+    }
+
     private void scrollToShift() {
         if (!shifts.isEmpty()) {
             int position = -1;
             Calendar now = Calendar.getInstance();
+            int weekOfYear = now.get(Calendar.WEEK_OF_YEAR);
+            int year = now.get(Calendar.YEAR);
+            if (weekOfYear == 1 && now.get(Calendar.WEEK_OF_MONTH)>1) { // Its december last week of month
+                year = year + 1;
+            }
             for (int i = 0 ; i<shifts.size(); i++) {
                 Shift shift = shifts.get(i);
-                if (shift.getWeek()==now.get(Calendar.WEEK_OF_YEAR) && shift.getYear()==now.get(Calendar.YEAR)) {
+                if (shift.getWeek()==weekOfYear && shift.getYear()==year) {
                     position = i;
                     break;
                 }

@@ -24,11 +24,15 @@ import com.defimak47.turnos.helpers.StuffInfoHelper;
 import com.defimak47.turnos.model.ContactInfo;
 import com.defimak47.turnos.model.StuffInfo;
 import com.defimak47.turnos.model.StuffRecord;
+import com.defimak47.turnos.utils.IOUtils;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private static final String STATIC_STUFF_URL = "https://spreadsheets.google.com/feeds/list/1D_7igYenGDjG-_nhh1miPuKRvVeR5-BpQxQR9YE6O-A/o39u79f/public/full?alt=json";
+    private static final String CONTACT_FILE_NAME = "stuff.json";
     private RecyclerView recList;
     private List<ContactInfo> contacts;
     private StuffInfo stuffinfo;
@@ -160,8 +165,13 @@ public class MainActivity extends AppCompatActivity
     private void initContacts () {
         contacts = new ArrayList<>();
         initOnlineStuffResource();
-        InputStream in = getStuffRawResourceInputStream(); //
-        processStuffResource(in);
+        InputStream in = null; //
+        try {
+            in = getStuffRawResourceInputStream();
+            processStuffResource(in);
+        } catch (IOException e) {
+            Log.e("MainActivity", "initContacts" + e.getMessage(), e);
+        }
     }
 
     private void processStuffResource(InputStream in) {
@@ -186,8 +196,35 @@ public class MainActivity extends AppCompatActivity
         return getResources().openRawResource(R.raw.lusers);
     }
 
-    private InputStream getStuffRawResourceInputStream () {
-        return getResources().openRawResource(R.raw.stuff);
+    private InputStream getStuffRawResourceInputStream () throws IOException {
+        if (!internalFileExists(CONTACT_FILE_NAME)) {
+            InputStream origin = getResources().openRawResource(R.raw.stuff);
+            writeStuffRawResource(origin);
+            origin.close();
+        }
+        return openFileInput(CONTACT_FILE_NAME);
+    }
+
+    private void writeStuffRawResource(InputStream origin) throws IOException {
+        OutputStream targout = openFileOutput(CONTACT_FILE_NAME, Context.MODE_PRIVATE);
+        IOUtils.copy(origin, targout);
+        targout.close();
+    }
+
+    private InputStream updateStuffRawResource(InputStream result) {
+        InputStream in = null;
+        try {
+            writeStuffRawResource(result);
+            in = openFileInput(CONTACT_FILE_NAME);
+        } catch (IOException e) {
+            Log.e("MainActivity", "updateStuff" + e.getMessage(), e);
+        }
+        return in;
+    }
+
+    private boolean internalFileExists(String shiftFileName) {
+        File file = getFileStreamPath(shiftFileName);
+        return file.exists();
     }
 
     private void goShiftActivity ( ) {
@@ -237,8 +274,13 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
             if (null!=result) {
-                processStuffResource(result);
-                adapter.notifyDataSetChanged();
+                InputStream in = updateStuffRawResource(result);
+                if (null!=in) {
+                    processStuffResource(in);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.e("OnlineStuffCallback", "onCompleted null inputstream" );
+                }
                 mProgress.setVisibility(View.GONE);
                 setProgressBarIndeterminateVisibility(Boolean.FALSE);
             }
