@@ -2,7 +2,6 @@ package com.defimak47.turnos.helpers;
 
 import android.text.TextUtils;
 import android.util.JsonReader;
-import android.util.Log;
 
 import com.defimak47.turnos.model.StuffInfo;
 import com.defimak47.turnos.model.StuffRecord;

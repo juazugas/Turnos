@@ -6,19 +6,19 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.helpers.StuffInfoHelper;
+import com.defimak47.turnos.prefs.PreferenceFacade;
 import com.defimak47.turnos.utils.IOUtils;
+import com.defimak47.turnos.utils.IsoDate;
 import com.defimak47.turnos.utils.NetworkUtils;
 
 import org.json.JSONException;
@@ -29,8 +29,8 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -76,6 +76,8 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
         Log.d(LOG_TAG, "Starting sync");
         // String locationQuery = Utility.getPreferredLocation(getContext());
 
+        PreferenceFacade.setLastSync(getContext(), IsoDate.dateToString(new Date(), IsoDate.DATE_TIME));
+
         OutputStream targetOut = null;
 
         // These two need to be declared outside the try/catch
@@ -110,20 +112,20 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
             int results = new StuffInfoHelper().readStuffInfo(origin).getTotalResults();
 
             Log.d(LOG_TAG, "Sync Complete. " + results + " Inserted");
-            setLocationStatus(getContext(), LOCATION_STATUS_OK);
+            PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_OK);
 
         } catch (ConnectException ce) {
             Log.e(LOG_TAG, "Error connecting");
-            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
+            PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point in attempting
             // to parse it.
-            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
+            PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
-            setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
+            PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -137,7 +139,6 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
         }
-        return;
     }
 
 
@@ -230,11 +231,6 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
-    }
-
-    public void setLocationStatus (Context context, @LocationStatus int status) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().putInt(context.getString(R.string.pref_location_status_key,status ), status).commit();
     }
 
 
