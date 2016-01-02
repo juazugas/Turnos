@@ -12,7 +12,7 @@ Implementing the sync adapter, checks once a day content from internet.
 <h2>To Do</h2>
 
 - Show synchronization errors with snackbar pattern (http://www.materialdoc.com/snackbar/).
-- Chekc on start if the last synchro was unsuccessful, inform and then launch sync again.
+- Check on start if the last synchro was unsuccessful, inform and then launch sync again.
 - Change reading the shifts from the Google sheet document like the team list.
 - Refresh action from the menu in each activity. (http://developer.android.com/intl/es/training/sync-adapters/running-sync-adapter.html#RunPeriodic)
 - Settings activity with posibility of change (google document key identifier, period of synchronization, user identifier) and

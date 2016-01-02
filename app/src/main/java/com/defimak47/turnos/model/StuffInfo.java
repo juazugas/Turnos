@@ -17,7 +17,7 @@ public class StuffInfo {
      * Link to spreadsheet Json source.
      * JsonPath: $.feed.author.link[0].href
      */
-    protected String linkToSourde;
+    protected String linkToSource;
     /**
      * Author name.
      * JsonPath: $.feed.author.name.$t
@@ -57,12 +57,12 @@ public class StuffInfo {
         this.lastupdated = lastupdated;
     }
 
-    public String getLinkToSourde() {
-        return linkToSourde;
+    public String getLinkToSource() {
+        return linkToSource;
     }
 
-    public void setLinkToSourde(String linkToSourde) {
-        this.linkToSourde = linkToSourde;
+    public void setLinkToSource(String linkToSource) {
+        this.linkToSource = linkToSource;
     }
 
     public String getAuthorName() {

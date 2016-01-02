@@ -44,7 +44,8 @@ public class StuffInfoHelperTest {
     public static final String UPDATED        = "2015-09-29T08:53:38.068Z";
     public static final String AUTHOR_NAME    = "parent";
     public static final String AUTHOR_EMAIL   = "parent@example.com";
-    public static final String HTTP_LINK_TO_SOURCE = "https://docs.google.com/spreadsheets/d/1D_7igYenGDjG-_nhh1miPuKRvVeR5-BpQxQR9YE6O-A/pubhtml";
+    public static final String HTTP_LINK_TO_SOURCE = "https://docs.google.com/spreadsheets/d/%s/pubhtml";
+    private static final String MY_TURNOS_GOOGLE_SHEET_KEY = BuildConfig.TURNOS_GOOGLE_SHEET_KEY;
 
     private static final String DUMMY_JSON =
             "{\"version\":\"1.0\",\"encoding\":\"UTF-8\",\"feed\":{\"xmlns\":\"http://www.w3.org/2005/Atom\"," +
@@ -89,7 +90,8 @@ public class StuffInfoHelperTest {
         _expect: {
             assertNotNull(stuffinfo);
             assertEquals(lastupdated, stuffinfo.getLastupdated());
-            assertEquals(HTTP_LINK_TO_SOURCE, stuffinfo.getLinkToSourde());
+            String httpLinkToSource = String.format(HTTP_LINK_TO_SOURCE, MY_TURNOS_GOOGLE_SHEET_KEY);
+            assertEquals(httpLinkToSource, stuffinfo.getLinkToSource());
             assertEquals("juazuri", stuffinfo.getAuthorName());
             assertEquals("juazuri@gmail.com", stuffinfo.getAuthorEmail());
             assertEquals(stuffinfo.getStuff().get(0).getLogin(), "sbellosta");
@@ -116,7 +118,7 @@ public class StuffInfoHelperTest {
         _expect: {
             assertNotNull(stuffinfo);
 //            assertEquals(lastupdated, stuffinfo.getLastupdated());
-            assertEquals(HTTP_LINK_TO_SOURCE, stuffinfo.getLinkToSourde());
+            assertEquals(HTTP_LINK_TO_SOURCE, stuffinfo.getLinkToSource());
             assertEquals("juazuri", stuffinfo.getAuthorName());
             assertEquals("juazuri@gmail.com", stuffinfo.getAuthorEmail());
             assertEquals(stuffinfo.getStuff().get(0).getLogin(), "sbellosta");
@@ -144,7 +146,7 @@ public class StuffInfoHelperTest {
         _expect: {
             assertNotNull(stuffinfo);
             assertEquals(lastupdated, stuffinfo.getLastupdated());
-            assertEquals(LINK_TO_SOURCE, stuffinfo.getLinkToSourde());
+            assertEquals(LINK_TO_SOURCE, stuffinfo.getLinkToSource());
             assertEquals(AUTHOR_NAME, stuffinfo.getAuthorName());
             assertEquals(AUTHOR_EMAIL, stuffinfo.getAuthorEmail());
             assertEquals(stuffinfo.getStuff().get(0).getLogin(), "dummy");
@@ -175,7 +177,8 @@ public class StuffInfoHelperTest {
     private InputStream getHttpSpreadSheetInputStream () {
         InputStream in = null;
         String urlString =
-                "https://spreadsheets.google.com/feeds/list/1D_7igYenGDjG-_nhh1miPuKRvVeR5-BpQxQR9YE6O-A/o39u79f/public/full?alt=json";
+                "https://spreadsheets.google.com/feeds/list/%s/o39u79f/public/full?alt=json";
+        urlString = String.format(urlString, MY_TURNOS_GOOGLE_SHEET_KEY);
         // Making HTTP request
         try {
             // Create a connection from url

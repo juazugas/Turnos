@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.adapter.ContactAdapter;
 import com.defimak47.turnos.helpers.StuffInfoHelper;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity
                        implements View.OnLongClickListener {
 
 
-    private static final String STATIC_STUFF_URL = "https://spreadsheets.google.com/feeds/list/1D_7igYenGDjG-_nhh1miPuKRvVeR5-BpQxQR9YE6O-A/o39u79f/public/full?alt=json";
+    private static final String STATIC_STUFF_URL = "https://spreadsheets.google.com/feeds/list/%s/o39u79f/public/full?alt=json";
     private static final String CONTACT_FILE_NAME = "stuff.json";
     private RecyclerView recList;
     private List<ContactInfo> contacts;
@@ -256,7 +257,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public String getStuffUrl() {
-        return STATIC_STUFF_URL;
+        return String.format(STATIC_STUFF_URL, BuildConfig.TURNOS_GOOGLE_SHEET_KEY);
     }
 
     private class OnlineStuffResourceFutureCallback implements FutureCallback<InputStream> {

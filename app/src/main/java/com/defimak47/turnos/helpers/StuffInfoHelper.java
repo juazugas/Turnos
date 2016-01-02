@@ -3,6 +3,7 @@ package com.defimak47.turnos.helpers;
 import android.text.TextUtils;
 import android.util.JsonReader;
 
+import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.model.StuffInfo;
 import com.defimak47.turnos.model.StuffRecord;
 import com.defimak47.turnos.utils.IsoDate;
@@ -21,8 +22,8 @@ import java.util.List;
  */
 public class StuffInfoHelper {
 
-
-    public static final String HTTP_STATIC_STUFF_URL = "https://spreadsheets.google.com/feeds/list/1D_7igYenGDjG-_nhh1miPuKRvVeR5-BpQxQR9YE6O-A/o39u79f/public/full?alt=json";
+    public static final String MY_TURNOS_GOOGLE_SHEET_KEY = BuildConfig.TURNOS_GOOGLE_SHEET_KEY;
+    public static final String HTTP_STATIC_STUFF_URL = "https://spreadsheets.google.com/feeds/list/" + MY_TURNOS_GOOGLE_SHEET_KEY+ "/o39u79f/public/full?alt=json";
     public static final String CONTACT_FILE_NAME = "stuff.json";
     public static final String HTTP_IMAGE_URI_TEMPLATE = "http://www.edicomgroup.com/dms/team/%s.jpg";
     public static final String MAIL_EDICOMGROUP_TEMPLATE = "%s@edicomgroup.com";
@@ -84,7 +85,7 @@ public class StuffInfoHelper {
             if (TextUtils.equals(name, JSON_ATOM_FEED_UPDATED_KEY)) {
                 stuff.setLastupdated(getTextAsDate(reader));
             } else if (TextUtils.equals(name, JSON_ATOM_FEED_LINK_KEY)) {
-                stuff.setLinkToSourde(readLinkToSource(reader));
+                stuff.setLinkToSource(readLinkToSource(reader));
             } else if (TextUtils.equals(name, JSON_ATOM_FEED_AUTHOR_KEY)) {
                 readAuthor(reader, stuff);
             } else if (TextUtils.equals(name, JSON_ATOM_FEED_TOTAL_RESULTS_KEY)) {
