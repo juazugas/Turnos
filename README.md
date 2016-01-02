@@ -24,3 +24,19 @@ For next versions :
   (https://medium.com/android-news/navigation-drawer-styling-according-material-design-5306190da08f#.oud0h1qoa)
 
 
+<h2>Note</h2>
+
+Please contact me to get the key for access to google sheet.
+Put it on your gradle.properties in the .gradle directory on your home directory under the variable MyTurnosGoogleSheetKey.
+
+Or create your own sheet with the next structure:
+
+- Page 1.<br/>
+year	week	date	sprint	EU	MX1	MX2<br/>
+2015	1	29/12/2014	#1	waldo	geraldo	faldo<br/>
+2015	2	5/01/2015	#1	fulano  mengano	zutano<br/>
+- Page 2.<br/>
+login	name	alias	position<br/>
+fulano	Fulano Mengano Zutano	full	Sofware engineer<br/>
+waldo	Waldo Geraldo Faldo	wally	Sofware engineer<br/>
+

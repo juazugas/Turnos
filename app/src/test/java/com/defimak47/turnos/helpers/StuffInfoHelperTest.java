@@ -118,7 +118,8 @@ public class StuffInfoHelperTest {
         _expect: {
             assertNotNull(stuffinfo);
 //            assertEquals(lastupdated, stuffinfo.getLastupdated());
-            assertEquals(HTTP_LINK_TO_SOURCE, stuffinfo.getLinkToSource());
+            String httpLinkToSource = String.format(HTTP_LINK_TO_SOURCE, MY_TURNOS_GOOGLE_SHEET_KEY);
+            assertEquals(httpLinkToSource, stuffinfo.getLinkToSource());
             assertEquals("juazuri", stuffinfo.getAuthorName());
             assertEquals("juazuri@gmail.com", stuffinfo.getAuthorEmail());
             assertEquals(stuffinfo.getStuff().get(0).getLogin(), "sbellosta");
