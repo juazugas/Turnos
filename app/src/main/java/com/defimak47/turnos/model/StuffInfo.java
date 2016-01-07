@@ -1,38 +1,13 @@
 package com.defimak47.turnos.model;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jzuriaga on 03/10/15.
  */
-public class StuffInfo {
+public class StuffInfo extends BaseInfo {
 
-    /**
-     * Last modification date.
-     * JsonPath: $.feed.updated.$t
-     */
-    protected Date lastupdated;
-    /**
-     * Link to spreadsheet Json source.
-     * JsonPath: $.feed.author.link[0].href
-     */
-    protected String linkToSource;
-    /**
-     * Author name.
-     * JsonPath: $.feed.author.name.$t
-     */
-    protected String authorName;
-    /**
-     * Author email.
-     * JsonPath: $.feed.author.email.$t
-     */
-    protected String authorEmail;
-    /**
-     * Number of results.
-     * $.feed.openSearch$totalResults.$t
-     */
-    protected Integer totalResults;
     /**
      * Stuff list.
      * JsonPath: $.feed.entry[...] {
@@ -46,54 +21,22 @@ public class StuffInfo {
      * Stuff info default constructor.
      */
     public StuffInfo () {
+        super();
         /* no-op constructor. */
     }
 
-    public Date getLastupdated() {
-        return lastupdated;
-    }
-
-    public void setLastupdated(Date lastupdated) {
-        this.lastupdated = lastupdated;
-    }
-
-    public String getLinkToSource() {
-        return linkToSource;
-    }
-
-    public void setLinkToSource(String linkToSource) {
-        this.linkToSource = linkToSource;
-    }
-
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
-    public String getAuthorEmail() {
-        return authorEmail;
-    }
-
-    public void setAuthorEmail(String authorEmail) {
-        this.authorEmail = authorEmail;
-    }
-
-    public Integer getTotalResults() {
-        return totalResults;
-    }
-
-    public void setTotalResults(Integer totalResults) {
-        this.totalResults = totalResults;
-    }
-
     public List<StuffRecord> getStuff() {
+        if (null==stuff) {
+            stuff = new ArrayList<>();
+        }
         return stuff;
     }
 
     public void setStuff(List<StuffRecord> stuff) {
         this.stuff = stuff;
+    }
+
+    public void addStuff(StuffRecord record) {
+        getStuff().add(record);
     }
 }

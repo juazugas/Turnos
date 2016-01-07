@@ -222,7 +222,7 @@ public class ShiftActivity extends AppCompatActivity
             Calendar now = Calendar.getInstance();
             int weekOfYear = now.get(Calendar.WEEK_OF_YEAR);
             int year = now.get(Calendar.YEAR);
-            if (weekOfYear == 1 && now.get(Calendar.WEEK_OF_MONTH)>1) { // Its december last week of month
+            if (weekOfYear == 1 && now.get(Calendar.WEEK_OF_MONTH)>2) { // Its december last week of month
                 year = year + 1;
             }
             for (int i = 0 ; i<shifts.size(); i++) {

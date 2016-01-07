@@ -9,24 +9,27 @@ import java.util.Date;
  */
 public class Shift {
 
-    private int index;
+    protected int index;
 
-    private int year;
+    protected int year;
 
-    private int week;
+    protected int week;
 
     @SerializedName("start_date")
-    private Date startDate;
+    protected Date startDate;
 
-    private int sprint;
+    protected int sprint;
 
-    private int pairing;
+    protected int pairing;
+
+    @SerializedName("P1_IMASDEU")
+    protected String imasdEu;
 
     @SerializedName("P1_IMASDMX1")
-    private String imasdMx1;
+    protected String imasdMx1;
 
     @SerializedName("P1_IMASDMX2")
-    private String imasdMx2;
+    protected String imasdMx2;
 
     public int getIndex() {
         return index;
@@ -74,6 +77,14 @@ public class Shift {
 
     public void setPairing(int pairing) {
         this.pairing = pairing;
+    }
+
+    public String getImasdEu() {
+        return imasdEu;
+    }
+
+    public void setImasdEu(String imasdEu) {
+        this.imasdEu = imasdEu;
     }
 
     public String getImasdMx1() {
