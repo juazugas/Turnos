@@ -18,7 +18,6 @@ import android.view.Window;
 
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.adapter.ShiftAdapter;
-import com.defimak47.turnos.helpers.ShiftHelper;
 import com.defimak47.turnos.helpers.ShiftInfoHelper;
 import com.defimak47.turnos.model.Shift;
 import com.defimak47.turnos.model.ShiftInfo;
