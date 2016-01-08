@@ -84,17 +84,18 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
             NetworkUtils.disableSSLCertificateChecking();
 
-            syncTargetJson(ShiftInfoHelper.HTTP_STATIC_SHIFT_URL, ShiftInfoHelper.SHIFT_FILE_NAME);
-
-            InputStream origin = getContext().openFileInput(ShiftInfoHelper.SHIFT_FILE_NAME);
-            int results = new ShiftInfoHelper().readShiftInfo(origin).getTotalResults();
-            Log.i(LOG_TAG, "Sync Shift Info Complete. " + results + " Inserted");
 
             syncTargetJson(StuffInfoHelper.HTTP_STATIC_STUFF_URL, StuffInfoHelper.CONTACT_FILE_NAME);
 
-            origin = getContext().openFileInput(StuffInfoHelper.CONTACT_FILE_NAME);
-            results = new StuffInfoHelper().readStuffInfo(origin).getTotalResults();
+            InputStream origin = getContext().openFileInput(StuffInfoHelper.CONTACT_FILE_NAME);
+            int results = new StuffInfoHelper().readStuffInfo(origin).getTotalResults();
             Log.i(LOG_TAG, "Sync Contact Info Complete. " + results + " Inserted");
+
+            syncTargetJson(ShiftInfoHelper.HTTP_STATIC_SHIFT_URL, ShiftInfoHelper.SHIFT_FILE_NAME);
+
+            origin = getContext().openFileInput(ShiftInfoHelper.SHIFT_FILE_NAME);
+            results = new ShiftInfoHelper().readShiftInfo(origin).getTotalResults();
+            Log.i(LOG_TAG, "Sync Shift Info Complete. " + results + " Inserted");
 
             PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_OK);
         } catch (ConnectException ce) {

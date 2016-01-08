@@ -19,9 +19,14 @@ import android.view.Window;
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.adapter.ShiftAdapter;
 import com.defimak47.turnos.helpers.ShiftHelper;
+import com.defimak47.turnos.helpers.ShiftInfoHelper;
 import com.defimak47.turnos.model.Shift;
+import com.defimak47.turnos.model.ShiftInfo;
+import com.defimak47.turnos.model.ShiftRecord;
 import com.defimak47.turnos.sync.TurnosSyncAdapter;
 import com.defimak47.turnos.utils.IOUtils;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +41,9 @@ public class ShiftActivity extends AppCompatActivity
                         implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     public static final String EXTRA_SEARCH = "__com_defimak47_turnos_extra_searh__";
-    private static final String SHIFT_FILE_NAME = "turnos.json";
+    private static final String SHIFT_FILE_NAME = "shift.json";
 
+    private ShiftInfo shiftinfo;
     private List<Shift> shifts;
 
     private RecyclerView recList;
@@ -103,7 +109,6 @@ public class ShiftActivity extends AppCompatActivity
         } else {
             scrollToShift();
         }
-
     }
 
     private String getIntentExtraSearch () {
@@ -188,22 +193,27 @@ public class ShiftActivity extends AppCompatActivity
      * Init the shift list.
      */
     private void initShifts() {
-        ShiftHelper helper = new ShiftHelper();
+        if (null==shifts) {
+            shifts = new ArrayList<>();
+        } else {
+            shifts.clear();
+        }
+        ShiftInfoHelper helper = new ShiftInfoHelper();
         try {
             InputStream in = getShiftResource();
-            shifts = helper.readShiftArray(in);
-            in.close();
-        } catch (IOException io) {
-            Log.w("ShiftActivity", "initShifts " + io.getMessage(), io);
-            if (null==shifts) {
-                shifts = new ArrayList<Shift>();
+            shiftinfo = helper.readShiftInfo(in);
+            for (ShiftRecord shiftRecord : shiftinfo.getShift()) {
+                shifts.add(shiftRecord);
             }
+            in.close();
+        } catch (IOException|JSONException io) {
+            Log.w("ShiftActivity", "initShifts " + io.getMessage(), io);
         }
     }
 
     private InputStream getShiftResource() throws IOException {
         if (!internalFileExists(SHIFT_FILE_NAME)) {
-            InputStream origin = getResources().openRawResource(R.raw.turnos);
+            InputStream origin = getResources().openRawResource(R.raw.shift);
             OutputStream targout = openFileOutput(SHIFT_FILE_NAME, Context.MODE_PRIVATE);
             IOUtils.copy(origin, targout);
             origin.close();

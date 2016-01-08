@@ -58,6 +58,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
         shiftViewHolder.vPairing.setText(String.format(PAIRING_TEMPLATE, shift.getPairing()));
         shiftViewHolder.vImasdMx1.setText(shift.getImasdMx1());
         shiftViewHolder.vImasdMx2.setText(shift.getImasdMx2());
+        shiftViewHolder.vImasdEu.setText(shift.getImasdEu());
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             shiftViewHolder.vStartDate.setClipToOutline(true);
         }
@@ -119,6 +120,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
         String dateText = DateFormat.format(DATE_FORMAT_PATTERN, shift.getStartDate()).toString();
         return shift.getImasdMx1().toLowerCase().contains(lowerQueryText) ||
                shift.getImasdMx2().toLowerCase().contains(lowerQueryText) ||
+               shift.getImasdEu().toLowerCase().contains(lowerQueryText) ||
                dateText.toLowerCase().contains(lowerQueryText);
     }
 
@@ -132,6 +134,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
         protected TextView vWeek;
         protected TextView vImasdMx1;
         protected TextView vImasdMx2;
+        protected TextView vImasdEu;
         protected TextView vPairing;
 
         public ShiftViewHolder(View v) {
@@ -141,6 +144,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
             vWeek = (TextView) v.findViewById(R.id.textWeek);
             vImasdMx1 = (TextView) v.findViewById(R.id.textImasdMx1);
             vImasdMx2 = (TextView) v.findViewById(R.id.textImasdMx2);
+            vImasdEu = (TextView) v.findViewById(R.id.textImasdEu);
             vPairing = (TextView) v.findViewById(R.id.textPairing);
         }
     }

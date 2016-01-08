@@ -57,7 +57,7 @@
             android:stateListAnimator="@anim/button_elevation"/>
 
         <TextView
-            android:text="MX1    +    MX2"
+            android:text="MX1    +    MX2\nEU"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textSprint"
@@ -88,7 +88,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textImasdMx1"
-            android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:paddingStart="96dp"
             android:text="rtribaldos"
@@ -99,6 +98,21 @@
             tools:text="rtribaldos" />
 
         <TextView
+            android:id="@+id/textImasdEu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textImasdMx2"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:text="fsantonja"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/colorForeground"
+            tools:text="fsantonja" />
+
+        <TextView
             android:id="@+id/textPairing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -106,7 +120,8 @@
             android:layout_marginStart="4dp"
             android:layout_marginBottom="4dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Pairing: 1" />
+            android:text="Pairing: 1"
+            android:visibility="gone" />
 
 
     </RelativeLayout>
