@@ -54,6 +54,8 @@ public class ShiftActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shift);
 
+        TurnosSyncAdapter.initializeSyncAdapter(this);
+
         initShifts();
         recList = (RecyclerView) findViewById(R.id.shiftList);
         recList.setHasFixedSize(true);
@@ -102,7 +104,6 @@ public class ShiftActivity extends AppCompatActivity
             scrollToShift();
         }
 
-        TurnosSyncAdapter.initializeSyncAdapter(this);
     }
 
     private String getIntentExtraSearch () {

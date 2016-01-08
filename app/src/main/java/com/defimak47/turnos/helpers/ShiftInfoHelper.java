@@ -19,8 +19,8 @@ import java.io.InputStreamReader;
 public class ShiftInfoHelper extends AbstractBaseHelper<ShiftInfo> {
 
     public static final String MY_TURNOS_GOOGLE_SHEET_KEY = BuildConfig.TURNOS_GOOGLE_SHEET_KEY;
-    public static final String HTTP_STATIC_STUFF_URL = "https://spreadsheets.google.com/feeds/list/" + MY_TURNOS_GOOGLE_SHEET_KEY+ "/od6/public/full?alt=json";
-    public static final String CONTACT_FILE_NAME = "shift.json";
+    public static final String HTTP_STATIC_SHIFT_URL = "https://spreadsheets.google.com/feeds/list/" + MY_TURNOS_GOOGLE_SHEET_KEY+ "/od6/public/full?alt=json";
+    public static final String SHIFT_FILE_NAME = "shift.json";
 
 
     public static final String JSON_ATOM_ENTRY_YEAR_KEY = "gsx$year";

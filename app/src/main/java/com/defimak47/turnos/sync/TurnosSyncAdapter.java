@@ -15,6 +15,7 @@ import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.defimak47.turnos.R;
+import com.defimak47.turnos.helpers.ShiftInfoHelper;
 import com.defimak47.turnos.helpers.StuffInfoHelper;
 import com.defimak47.turnos.prefs.PreferenceFacade;
 import com.defimak47.turnos.utils.IOUtils;
@@ -78,42 +79,24 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
 
         PreferenceFacade.setLastSync(getContext(), IsoDate.dateToString(new Date(), IsoDate.DATE_TIME));
 
-        OutputStream targetOut = null;
-
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
-        HttpsURLConnection urlConnection = null;
         try {
             NetworkUtils.disableSSLCertificateChecking();
 
-            targetOut = getContext().openFileOutput(StuffInfoHelper.CONTACT_FILE_NAME, Context.MODE_PRIVATE);
-            // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are avaiable at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
-            final String BASE_URL = StuffInfoHelper.HTTP_STATIC_STUFF_URL;
-                    // "http://localhost:13421/?";
-                    // "http://api.openweathermap.org/data/2.5/forecast/daily?";
+            syncTargetJson(ShiftInfoHelper.HTTP_STATIC_SHIFT_URL, ShiftInfoHelper.SHIFT_FILE_NAME);
 
-            Uri builtUri = Uri.parse(BASE_URL).buildUpon().build();
+            InputStream origin = getContext().openFileInput(ShiftInfoHelper.SHIFT_FILE_NAME);
+            int results = new ShiftInfoHelper().readShiftInfo(origin).getTotalResults();
+            Log.i(LOG_TAG, "Sync Shift Info Complete. " + results + " Inserted");
 
-            URL url = new URL(builtUri.toString());
+            syncTargetJson(StuffInfoHelper.HTTP_STATIC_STUFF_URL, StuffInfoHelper.CONTACT_FILE_NAME);
 
-            // Create the request to OpenWeatherMap, and open the connection
-            urlConnection = (HttpsURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+            origin = getContext().openFileInput(StuffInfoHelper.CONTACT_FILE_NAME);
+            results = new StuffInfoHelper().readStuffInfo(origin).getTotalResults();
+            Log.i(LOG_TAG, "Sync Contact Info Complete. " + results + " Inserted");
 
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            IOUtils.copy(inputStream, targetOut);
-            inputStream.close();
-
-            InputStream origin = getContext().openFileInput(StuffInfoHelper.CONTACT_FILE_NAME);
-            int results = new StuffInfoHelper().readStuffInfo(origin).getTotalResults();
-
-            Log.d(LOG_TAG, "Sync Complete. " + results + " Inserted");
             PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_OK);
-
         } catch (ConnectException ce) {
             Log.e(LOG_TAG, "Error connecting");
             PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
@@ -126,9 +109,37 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
             PreferenceFacade.setLocationStatus(getContext(), LOCATION_STATUS_SERVER_INVALID);
+        }
+    }
+
+    private void syncTargetJson(final String targetUrl, final String targetFileName) throws IOException {
+        HttpsURLConnection urlConnection = null;
+        OutputStream targetOut = null;
+        InputStream inputStream = null;
+
+        try {
+            targetOut = getContext().openFileOutput(targetFileName, Context.MODE_PRIVATE);
+
+            Uri builtUri = Uri.parse(targetUrl).buildUpon().build();
+
+            URL url = new URL(builtUri.toString());
+
+            // Create the request to OpenWeatherMap, and open the connection
+            urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Read the input stream into a String
+            inputStream = urlConnection.getInputStream();
+            IOUtils.copy(inputStream, targetOut);
+
         } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
+            if (null!=inputStream) {
+                try {
+                    inputStream.close();
+                } catch (final IOException e) {
+                    Log.e(LOG_TAG, "Error closing stream", e);
+                }
             }
             if (targetOut != null) {
                 try {
@@ -137,7 +148,9 @@ public class TurnosSyncAdapter extends AbstractThreadedSyncAdapter {
                     Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
-
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
     }
 
