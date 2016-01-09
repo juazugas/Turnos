@@ -6,16 +6,23 @@ import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.defimak47.turnos.R;
+import com.defimak47.turnos.helpers.ContactInfoHelper;
+import com.defimak47.turnos.helpers.ShiftInfoHelper;
 import com.defimak47.turnos.model.Shift;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,9 +36,12 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
     public static final String SPRINT_TEMPLATE = "Sprint #%d";
     public static final String PAIRING_TEMPLATE = "Pairing %d";
 
-    public static final String DATE_FORMAT_PATTERN = "dd'\n'MMM'\n'yyyy";
+    public static final String BTN_DATE_FORMAT_PATTERN = "dd'\n'MMM'\n'yyyy";
+    public static final String DATE_FORMAT_PATTERN = "dd MMM yyyy";
+    public static final String DATE_TITLE_TEMPLATE = "Start %s - End %s";
 
     public static final String CALENDAR_TITLE_TEMPLATE = "Turno Mx %s + %s. Week %d";
+    private static final int CURRENT_SHIFT = 1;
 
     public static long MILLIS_IN_HOUR =  60*60*1000;
 
@@ -51,8 +61,9 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
     }
 
     @Override
-    public void onBindViewHolder(ShiftViewHolder shiftViewHolder, int i) {
-        final Shift shift = shiftList.get(i);
+    public void onBindViewHolder(ShiftViewHolder shiftViewHolder, int position) {
+        final Shift shift = shiftList.get(position);
+        int viewType = getItemViewType(position);
         shiftViewHolder.vSprint.setText(String.format(SPRINT_TEMPLATE, shift.getSprint()));
         shiftViewHolder.vWeek.setText(String.format(WEEK_TEMPLATE, shift.getYear(), shift.getWeek()));
         shiftViewHolder.vPairing.setText(String.format(PAIRING_TEMPLATE, shift.getPairing()));
@@ -62,35 +73,81 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             shiftViewHolder.vStartDate.setClipToOutline(true);
         }
-        shiftViewHolder.vStartDate.setText(DateFormat.format(DATE_FORMAT_PATTERN, shift.getStartDate()));
-        shiftViewHolder.vStartDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_EDIT);
-                intent.setType(CALENDAR_EVENT_CONTENT_TYPE);
-                String title = String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek());
-                intent.putExtra(CalendarContract.Events.TITLE,
-                        String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek()));
-                String description = String.format(SPRINT_TEMPLATE, shift.getSprint());
-                intent.putExtra(CalendarContract.Events.DESCRIPTION,
-                        new StringBuilder().append(title).append("\n").append(description).toString());
-                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Edicom");
-                intent.putExtra(CalendarContract.Events.ALL_DAY, false);
-                long dtStart = shift.getStartDate().getTime();
-                long duration = 9*MILLIS_IN_HOUR;
-                long dtNotify = dtStart- 20*MILLIS_IN_HOUR;
-                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, shift.getStartDate().getTime());
-                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, dtStart+duration);
-                intent.putExtra(CalendarContract.CalendarAlerts.ALARM_TIME, dtNotify);
-                ShiftAdapter.this.getContext().startActivity(intent);
-            }
-        });
+        if (viewType==CURRENT_SHIFT) {
+            shiftViewHolder.vStartDate.setText(getDateTitle(shift.getStartDate()));
+            Ion.with(getContext())
+                    .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdEu()))
+                    .setLogging("onBindViewHolder", Log.INFO)
+                    .withBitmap()
+                    .fitXY()
+                    .intoImageView(shiftViewHolder.vImageImasdEu);
+            Ion.with(getContext())
+                    .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdMx1()))
+                    .setLogging("onBindViewHolder", Log.INFO)
+                    .withBitmap()
+                    .fitXY()
+                    .intoImageView(shiftViewHolder.vImageImasdMx1);
+            Ion.with(getContext())
+                    .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdMx2()))
+                    .setLogging("onBindViewHolder", Log.INFO)
+                    .withBitmap()
+                    .fitXY()
+                    .intoImageView(shiftViewHolder.vImageImasdMx2);
+        } else {
+            shiftViewHolder.vStartDate.setText(DateFormat.format(BTN_DATE_FORMAT_PATTERN, shift.getStartDate()));
+            shiftViewHolder.vStartDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_EDIT);
+                    intent.setType(CALENDAR_EVENT_CONTENT_TYPE);
+                    String title = String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek());
+                    intent.putExtra(CalendarContract.Events.TITLE,
+                            String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek()));
+                    String description = String.format(SPRINT_TEMPLATE, shift.getSprint());
+                    intent.putExtra(CalendarContract.Events.DESCRIPTION,
+                            new StringBuilder().append(title).append("\n").append(description).toString());
+                    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Edicom");
+                    intent.putExtra(CalendarContract.Events.ALL_DAY, false);
+                    long dtStart = shift.getStartDate().getTime();
+                    long duration = 9 * MILLIS_IN_HOUR;
+                    long dtNotify = dtStart - 20 * MILLIS_IN_HOUR;
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, shift.getStartDate().getTime());
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, dtStart + duration);
+                    intent.putExtra(CalendarContract.CalendarAlerts.ALARM_TIME, dtNotify);
+                    ShiftAdapter.this.getContext().startActivity(intent);
+                }
+            });
+        }
+    }
+
+    private String getDateTitle (Date date) {
+        CharSequence startDate = DateFormat.format(DATE_FORMAT_PATTERN, date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, 5);
+        CharSequence endDate = DateFormat.format(DATE_FORMAT_PATTERN, calendar.getTime());
+        return String.format(DATE_TITLE_TEMPLATE, startDate, endDate);
     }
 
     @Override
-    public ShiftViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.card_shift, viewGroup, false);
+    public int getItemViewType(int position) {
+        Shift shift = shiftList.get(position);
+        if (ShiftInfoHelper.isCurrentShift(shift)) {
+            return CURRENT_SHIFT;
+        }
+        return 0;
+    }
+
+    @Override
+    public ShiftViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View itemView;
+        if (viewType == CURRENT_SHIFT) {
+            itemView = LayoutInflater.from(viewGroup.getContext()).
+                    inflate(R.layout.card_shift_current, viewGroup, false);
+        } else {
+            itemView = LayoutInflater.from(viewGroup.getContext()).
+                    inflate(R.layout.card_shift, viewGroup, false);
+        }
         return new ShiftViewHolder(itemView);
     }
 
@@ -129,6 +186,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
      * Holder for the Recycler view.
      */
     public static class ShiftViewHolder extends RecyclerView.ViewHolder {
+
         protected Button vStartDate;
         protected TextView vSprint;
         protected TextView vWeek;
@@ -136,6 +194,11 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
         protected TextView vImasdMx2;
         protected TextView vImasdEu;
         protected TextView vPairing;
+
+        // for current shift
+        protected ImageView vImageImasdEu;
+        protected ImageView vImageImasdMx1;
+        protected ImageView vImageImasdMx2;
 
         public ShiftViewHolder(View v) {
             super(v);
@@ -146,6 +209,16 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
             vImasdMx2 = (TextView) v.findViewById(R.id.textImasdMx2);
             vImasdEu = (TextView) v.findViewById(R.id.textImasdEu);
             vPairing = (TextView) v.findViewById(R.id.textPairing);
+            if (null!=v.findViewById(R.id.imImasdEu)) {
+                vImageImasdEu = (ImageView) v.findViewById(R.id.imImasdEu);
+            }
+            if (null!=v.findViewById(R.id.imImasdMx1)) {
+                vImageImasdMx1 = (ImageView) v.findViewById(R.id.imImasdMx1);
+            }
+            if (null!=v.findViewById(R.id.imImasdMx2)) {
+                vImageImasdMx2 = (ImageView) v.findViewById(R.id.imImasdMx2);
+            }
+
         }
     }
 

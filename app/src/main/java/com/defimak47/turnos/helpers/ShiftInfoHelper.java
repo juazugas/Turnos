@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.JsonReader;
 
 import com.defimak47.turnos.BuildConfig;
+import com.defimak47.turnos.model.Shift;
 import com.defimak47.turnos.model.ShiftInfo;
 import com.defimak47.turnos.model.ShiftRecord;
 
@@ -12,6 +13,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 
 /**
  * Created by jzuriaga on 7/1/16.
@@ -94,5 +96,15 @@ public class ShiftInfoHelper extends AbstractBaseHelper<ShiftInfo> {
         }
         reader.endObject();
         shiftInfo.addShift(record);
+    }
+
+    public static boolean isCurrentShift (Shift shift) {
+        Calendar now = Calendar.getInstance();
+        int weekOfYear = now.get(Calendar.WEEK_OF_YEAR);
+        int year = now.get(Calendar.YEAR);
+        if (weekOfYear == 1 && now.get(Calendar.WEEK_OF_MONTH)>2) { // Its december last week of month
+            year = year + 1;
+        }
+        return shift.getWeek()==weekOfYear && shift.getYear()==year;
     }
 }
