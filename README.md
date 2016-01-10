@@ -9,11 +9,6 @@ of android development.
 
 Implementing the sync adapter, checks once a day content from internet.
 
-<h2>Changes</h2>
-
-- Change reading the shifts from the Google sheet document like the team list.
-- New Card view to show the current support week.
-
 <h2>To Do</h2>
 
 - Show synchronization errors with snackbar pattern (http://www.materialdoc.com/snackbar/).
@@ -43,4 +38,17 @@ year	week	date	sprint	EU	MX1	MX2<br/>
 login	name	alias	position<br/>
 fulano	Fulano Mengano Zutano	full	Sofware engineer<br/>
 waldo	Waldo Geraldo Faldo	wally	Sofware engineer<br/>
+
+<h2>Changes</h2>
+
+2016-01-10
+
+- Remove references to google spreadsheet.
+- New menu options to refresh content and show current support shift.
+
+2016-01-07
+
+- Change reading the shifts from the Google sheet document like the team list.
+- New Card view to show the current support week.
+
 

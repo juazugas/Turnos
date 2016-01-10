@@ -1,8 +1,12 @@
 package com.defimak47.turnos.view;
 
+import android.accounts.Account;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SyncStatusObserver;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +53,20 @@ public class ShiftActivity extends AppCompatActivity
 
     private LinearLayoutManager linearLayoutManager;
 
+    /**
+     * Handle to a SyncObserver. The ProgressBar element is visible until the SyncObserver reports
+     * that the sync is complete.
+     *
+     * <p>This allows us to delete our SyncObserver once the application is no longer in the
+     * foreground.
+     */
+    private Object mSyncObserverHandle;
+
+    /**
+     * Options menu used to populate ActionBar.
+     */
+    private Menu mOptionsMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
@@ -61,7 +79,7 @@ public class ShiftActivity extends AppCompatActivity
 
         TurnosSyncAdapter.initializeSyncAdapter(this);
 
-        initShifts();
+        loadShifts();
         recList = (RecyclerView) findViewById(R.id.shiftList);
         recList.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -126,6 +144,7 @@ public class ShiftActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_shift, menu);
+        mOptionsMenu = menu;
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -153,6 +172,10 @@ public class ShiftActivity extends AppCompatActivity
            goTeamActivity();
         } else if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_current) {
+            scrollToShift();
+        } else if (id == R.id.action_refresh) {
+            TurnosSyncAdapter.syncImmediately(this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -180,6 +203,26 @@ public class ShiftActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSyncStatusObserver.onStatusChanged(0);
+
+        // Watch for sync state changes
+        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
+                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+        mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mSyncObserverHandle != null) {
+            ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+            mSyncObserverHandle = null;
+        }
+    }
+
     private void flushFilterAdapter () {
         ((ShiftAdapter)recList.getAdapter()).flushFilter();
     }
@@ -189,9 +232,9 @@ public class ShiftActivity extends AppCompatActivity
     }
 
     /**
-     * Init the shift list.
+     * Load the shift list.
      */
-    private void initShifts() {
+    private void loadShifts() {
         if (null==shifts) {
             shifts = new ArrayList<>();
         } else {
@@ -206,7 +249,7 @@ public class ShiftActivity extends AppCompatActivity
             }
             in.close();
         } catch (IOException|JSONException io) {
-            Log.w("ShiftActivity", "initShifts " + io.getMessage(), io);
+            Log.w("ShiftActivity", "loadShifts " + io.getMessage(), io);
         }
     }
 
@@ -255,5 +298,75 @@ public class ShiftActivity extends AppCompatActivity
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * Set the state of the Refresh button. If a sync is active, turn on the ProgressBar widget.
+     * Otherwise, turn it off.
+     *
+     * @param refreshing True if an active sync is occuring, false otherwise
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void setRefreshActionButtonState(boolean refreshing) {
+        if (mOptionsMenu == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            return;
+        }
+
+        final MenuItem refreshItem = mOptionsMenu.findItem(R.id.action_refresh);
+        if (refreshItem != null) {
+            if (refreshing) {
+                refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
+            } else {
+                refreshItem.setActionView(null);
+            }
+        }
+    }
+
+    /**
+     * Crfate a new anonymous SyncStatusObserver. It's attached to the app's ContentResolver in
+     * onResume(), and removed in onPause(). If status changes, it sets the state of the Refresh
+     * button. If a sync is active or pending, the Refresh button is replaced by an indeterminate
+     * ProgressBar; otherwise, the button itself is displayed.
+     */
+    private SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
+
+        /** Callback invoked with the sync adapter status changes. */
+        @Override
+        public void onStatusChanged(final int which) {
+            ShiftActivity.this.runOnUiThread(new Runnable() {
+                /**
+                 * The SyncAdapter runs on a background thread. To update the UI, onStatusChanged()
+                 * runs on the UI thread.
+                 */
+                @Override
+                public void run() {
+
+                    Context context = ShiftActivity.this;
+
+                    // Create a handle to the account that was created by
+                    // SyncService.CreateSyncAccount(). This will be used to query the system to
+                    // see how the sync status has changed.
+                    Account account = TurnosSyncAdapter.getSyncAccount(context);
+                    if (account == null) {
+                        // GetAccount() returned an invalid value. This shouldn't happen, but
+                        // we'll set the status to "not refreshing".
+                        setRefreshActionButtonState(false);
+                        return;
+                    }
+
+                    // Test the ContentResolver to see if the sync adapter is active or pending.
+                    // Set the state of the refresh button accordingly.
+                    boolean syncActive = ContentResolver.isSyncActive(
+                            account, TurnosSyncAdapter.getSyncAuthority(context));
+                    boolean syncPending = ContentResolver.isSyncPending(
+                            account, TurnosSyncAdapter.getSyncAuthority(context));
+                    setRefreshActionButtonState(syncActive || syncPending);
+                    if ( which != 0 && !(syncActive || syncPending)) {
+                        loadShifts();
+                        scrollToShift();
+                    }
+                }
+            });
+        }
+    };
 
 }

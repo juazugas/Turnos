@@ -51,7 +51,7 @@
             tools:text="Start 29 nov. 2014. End 05 dec. 2014"
             android:clickable="false" />
 
-        <com.defimak47.turnos.view.RoundedImageView
+        <ImageView
             android:id="@+id/imImasdEu"
             android:layout_width="@dimen/card_contact_image_width"
             android:layout_height="@dimen/card_contact_image_height"
@@ -79,7 +79,7 @@
             android:elevation="@dimen/elevation_medium"
             tools:text="fsantonja" />
 
-        <com.defimak47.turnos.view.RoundedImageView
+        <ImageView
             android:id="@+id/imImasdMx1"
             android:layout_width="@dimen/card_contact_image_width"
             android:layout_height="@dimen/card_contact_image_height"
@@ -109,7 +109,7 @@
             android:elevation="@dimen/elevation_medium"
             tools:text="lmargareto" />
 
-        <com.defimak47.turnos.view.RoundedImageView
+        <ImageView
             android:id="@+id/imImasdMx2"
             android:layout_width="@dimen/card_contact_image_width"
             android:layout_height="@dimen/card_contact_image_height"

@@ -1,4 +1,4 @@
-package com.defimak47.turnos.view;
+package com.defimak47.turnos.component;
 
 import android.content.Context;
 import android.graphics.Bitmap;

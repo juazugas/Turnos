@@ -14,4 +14,7 @@
 
     <dimen name="card_contact_image_width">92dp</dimen>
     <dimen name="card_contact_image_height">100dp</dimen>
+
+    <dimen name="action_button_min_width">56dp</dimen>
+    <dimen name="indeterminate_progress_size">32dp</dimen>
 </resources>
