@@ -2,8 +2,11 @@ package com.defimak47.turnos.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.CalendarContract;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -18,6 +21,7 @@ import com.defimak47.turnos.R;
 import com.defimak47.turnos.helpers.ContactInfoHelper;
 import com.defimak47.turnos.helpers.ShiftInfoHelper;
 import com.defimak47.turnos.model.Shift;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
@@ -61,7 +65,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
     }
 
     @Override
-    public void onBindViewHolder(ShiftViewHolder shiftViewHolder, int position) {
+    public void onBindViewHolder(final ShiftViewHolder shiftViewHolder, int position) {
         final Shift shift = shiftList.get(position);
         int viewType = getItemViewType(position);
         shiftViewHolder.vSprint.setText(String.format(SPRINT_TEMPLATE, shift.getSprint()));
@@ -78,21 +82,45 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
             Ion.with(getContext())
                     .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdEu()))
                     .setLogging("onBindViewHolder", Log.INFO)
-                    .withBitmap()
-                    .fitXY()
-                    .intoImageView(shiftViewHolder.vImageImasdEu);
+                    .asBitmap()
+                    .setCallback(new FutureCallback<Bitmap>() {
+                        @Override
+                        public void onCompleted(Exception e, Bitmap result) {
+                            if (null==e) {
+                                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), result);
+                                roundedBitmapDrawable.setCornerRadius(Math.max(result.getWidth(), result.getHeight()) / 2.0f);
+                                shiftViewHolder.vImageImasdEu.setImageDrawable(roundedBitmapDrawable);
+                            }
+                        }
+                    });
             Ion.with(getContext())
                     .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdMx1()))
                     .setLogging("onBindViewHolder", Log.INFO)
-                    .withBitmap()
-                    .fitXY()
-                    .intoImageView(shiftViewHolder.vImageImasdMx1);
+                    .asBitmap()
+                    .setCallback(new FutureCallback<Bitmap>() {
+                        @Override
+                        public void onCompleted(Exception e, Bitmap result) {
+                            if (null==e) {
+                                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), result);
+                                roundedBitmapDrawable.setCornerRadius(Math.max(result.getWidth(), result.getHeight()) / 2.0f);
+                                shiftViewHolder.vImageImasdMx1.setImageDrawable(roundedBitmapDrawable);
+                            }
+                        }
+                    });
             Ion.with(getContext())
                     .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdMx2()))
                     .setLogging("onBindViewHolder", Log.INFO)
-                    .withBitmap()
-                    .fitXY()
-                    .intoImageView(shiftViewHolder.vImageImasdMx2);
+                    .asBitmap()
+                    .setCallback(new FutureCallback<Bitmap>() {
+                        @Override
+                        public void onCompleted(Exception e, Bitmap result) {
+                            if (null==e) {
+                                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), result);
+                                roundedBitmapDrawable.setCornerRadius(Math.max(result.getWidth(), result.getHeight()) / 2.0f);
+                                shiftViewHolder.vImageImasdMx2.setImageDrawable(roundedBitmapDrawable);
+                            }
+                        }
+                    });
         } else {
             shiftViewHolder.vStartDate.setText(DateFormat.format(BTN_DATE_FORMAT_PATTERN, shift.getStartDate()));
             shiftViewHolder.vStartDate.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package com.defimak47.turnos.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.helpers.ContactInfoHelper;
 import com.defimak47.turnos.model.ContactInfo;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.List;
@@ -41,7 +43,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     }
 
     @Override
-    public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
+    public void onBindViewHolder(final ContactViewHolder contactViewHolder, int i) {
         ContactInfo ci = contactList.get(i);
         contactViewHolder.vName.setText(ci.getName());
         contactViewHolder.vPosition.setText(ci.getPosition());
@@ -51,9 +53,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         Ion.with(getContext())
            .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, ci.getLogin()))
            .setLogging("onBindViewHolder", Log.INFO)
-           .withBitmap()
-           .fitXY()
-           .intoImageView(contactViewHolder.vImage);
+           .asBitmap()
+           .setCallback(new FutureCallback<Bitmap>() {
+               @Override
+               public void onCompleted(Exception e, Bitmap result) {
+                   if (null==e) {
+                       contactViewHolder.vImage.setImageBitmap(result);
+                   }
+               }
+           });
     }
 
     @Override
