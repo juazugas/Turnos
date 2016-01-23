@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.CalendarContract;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -87,9 +85,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
                         @Override
                         public void onCompleted(Exception e, Bitmap result) {
                             if (null==e) {
-                                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), result);
-                                roundedBitmapDrawable.setCornerRadius(Math.max(result.getWidth(), result.getHeight()) / 2.0f);
-                                shiftViewHolder.vImageImasdEu.setImageDrawable(roundedBitmapDrawable);
+                                shiftViewHolder.vImageImasdEu.setImageBitmap(result);
                             }
                         }
                     });
@@ -101,9 +97,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
                         @Override
                         public void onCompleted(Exception e, Bitmap result) {
                             if (null==e) {
-                                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), result);
-                                roundedBitmapDrawable.setCornerRadius(Math.max(result.getWidth(), result.getHeight()) / 2.0f);
-                                shiftViewHolder.vImageImasdMx1.setImageDrawable(roundedBitmapDrawable);
+                                shiftViewHolder.vImageImasdMx1.setImageBitmap(result);
                             }
                         }
                     });
@@ -115,9 +109,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
                         @Override
                         public void onCompleted(Exception e, Bitmap result) {
                             if (null==e) {
-                                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), result);
-                                roundedBitmapDrawable.setCornerRadius(Math.max(result.getWidth(), result.getHeight()) / 2.0f);
-                                shiftViewHolder.vImageImasdMx2.setImageDrawable(roundedBitmapDrawable);
+                                shiftViewHolder.vImageImasdMx2.setImageBitmap(result);
                             }
                         }
                     });

@@ -26,7 +26,9 @@ import android.widget.ImageView;
 import com.defimak47.turnos.R;
 
 /**
- * Created by jzuriaga on 19/1/16.
+ * Circular image view.
+ *
+ * {@linkplain https://github.com/Pkmmte/CircularImageView}
  */
 public class CircularImageView extends ImageView
 {
