@@ -107,4 +107,9 @@ public class ShiftInfoHelper extends AbstractBaseHelper<ShiftInfo> {
         }
         return shift.getWeek()==weekOfYear && shift.getYear()==year;
     }
+
+    public static boolean isPastShift (Shift shift) {
+        Calendar now = Calendar.getInstance();
+        return now.getTime().after(shift.getStartDate());
+    }
 }

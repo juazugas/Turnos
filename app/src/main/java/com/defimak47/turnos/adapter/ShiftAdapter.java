@@ -115,28 +115,32 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
                     });
         } else {
             shiftViewHolder.vStartDate.setText(DateFormat.format(BTN_DATE_FORMAT_PATTERN, shift.getStartDate()));
-            shiftViewHolder.vStartDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_EDIT);
-                    intent.setType(CALENDAR_EVENT_CONTENT_TYPE);
-                    String title = String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek());
-                    intent.putExtra(CalendarContract.Events.TITLE,
-                            String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek()));
-                    String description = String.format(SPRINT_TEMPLATE, shift.getSprint());
-                    intent.putExtra(CalendarContract.Events.DESCRIPTION,
-                            new StringBuilder().append(title).append("\n").append(description).toString());
-                    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Edicom");
-                    intent.putExtra(CalendarContract.Events.ALL_DAY, false);
-                    long dtStart = shift.getStartDate().getTime();
-                    long duration = 9 * MILLIS_IN_HOUR;
-                    long dtNotify = dtStart - 20 * MILLIS_IN_HOUR;
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, shift.getStartDate().getTime());
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, dtStart + duration);
-                    intent.putExtra(CalendarContract.CalendarAlerts.ALARM_TIME, dtNotify);
-                    ShiftAdapter.this.getContext().startActivity(intent);
-                }
-            });
+            if (ShiftInfoHelper.isPastShift(shift)) {
+                shiftViewHolder.vStartDate.setClickable(false);
+            } else {
+                shiftViewHolder.vStartDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_EDIT);
+                        intent.setType(CALENDAR_EVENT_CONTENT_TYPE);
+                        String title = String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek());
+                        intent.putExtra(CalendarContract.Events.TITLE,
+                                String.format(CALENDAR_TITLE_TEMPLATE, shift.getImasdMx1(), shift.getImasdMx2(), shift.getWeek()));
+                        String description = String.format(SPRINT_TEMPLATE, shift.getSprint());
+                        intent.putExtra(CalendarContract.Events.DESCRIPTION,
+                                new StringBuilder().append(title).append("\n").append(description).toString());
+                        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Edicom");
+                        intent.putExtra(CalendarContract.Events.ALL_DAY, false);
+                        long dtStart = shift.getStartDate().getTime();
+                        long duration = 9 * MILLIS_IN_HOUR;
+                        long dtNotify = dtStart - 20 * MILLIS_IN_HOUR;
+                        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, shift.getStartDate().getTime());
+                        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, dtStart + duration);
+                        intent.putExtra(CalendarContract.CalendarAlerts.ALARM_TIME, dtNotify);
+                        ShiftAdapter.this.getContext().startActivity(intent);
+                    }
+                });
+            }
         }
     }
 

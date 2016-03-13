@@ -5,12 +5,12 @@
 
     <item android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="ifRoom|collapseActionView"
+        app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
     <item android:id="@+id/action_current"
         android:icon="@android:drawable/ic_menu_today"
-        android:title="@string/action_current" app:showAsAction="always"
+        android:title="@string/action_current" app:showAsAction="ifRoom"
         android:orderInCategory="1" />
 
     <item android:id="@+id/action_team" android:title="@string/action_team"

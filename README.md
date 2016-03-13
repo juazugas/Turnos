@@ -13,14 +13,16 @@ Implementing the sync adapter, checks once a day content from internet.
 
 - Show synchronization errors with snackbar pattern (http://www.materialdoc.com/snackbar/).
 - Check on start if the last synchro was unsuccessful, inform and then launch sync again.
-- Refresh action from the menu in each activity. (http://developer.android.com/intl/es/training/sync-adapters/running-sync-adapter.html#RunPeriodic)
 - Preferences activity with posibility of change (google document key identifier, period of synchronization, user identifier) and
-reading of preferences (last sync date, las sync status).
+  reading of preferences (last sync date, las sync status). Extra: show images in all shifts (boolean, default false), show month headers (boolean, default false),
+  show previous shifts (boolean, default true).
+- Horizontal views. Suggerence: StaggeredGridLayout.
 
 For next versions :
 
 - Navigation drawer with pre-filter options : my shifts, all shifts, by month (3 rounding months).
   (https://medium.com/android-news/navigation-drawer-styling-according-material-design-5306190da08f#.oud0h1qoa)
+- Add a month header to the shift list.
 
 
 <h2>Note</h2>
@@ -41,8 +43,15 @@ waldo	Waldo Geraldo Faldo	wally	Sofware engineer<br/>
 
 <h2>Changes</h2>
 
+2016-03-13
+
+- Cancel click on previous shifts.
+- Hide 'current shift' button when searching.
+- Update project to Android Studio 2.1 and prepare for 'Instant run' feature.
+
 2016-01-10
 
+- Refresh action from the menu in each activity. (http://developer.android.com/intl/es/training/sync-adapters/running-sync-adapter.html#RunPeriodic)
 - Remove references to google spreadsheet.
 - New menu options to refresh content and show current support shift.
 
