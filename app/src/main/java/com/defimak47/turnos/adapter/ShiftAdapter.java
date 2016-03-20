@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.CalendarContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -114,11 +115,12 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
                         }
                     });
         } else {
+            View view = (null!=shiftViewHolder.vFabAddCal) ? shiftViewHolder.vFabAddCal : shiftViewHolder.vStartDate;
             shiftViewHolder.vStartDate.setText(DateFormat.format(BTN_DATE_FORMAT_PATTERN, shift.getStartDate()));
             if (ShiftInfoHelper.isPastShift(shift)) {
-                shiftViewHolder.vStartDate.setClickable(false);
+                view.setClickable(false);
             } else {
-                shiftViewHolder.vStartDate.setOnClickListener(new View.OnClickListener() {
+                view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(Intent.ACTION_EDIT);
@@ -212,6 +214,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
     public static class ShiftViewHolder extends RecyclerView.ViewHolder {
 
         protected Button vStartDate;
+        protected FloatingActionButton vFabAddCal;
         protected TextView vSprint;
         protected TextView vWeek;
         protected TextView vImasdMx1;
@@ -226,7 +229,12 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
 
         public ShiftViewHolder(View v) {
             super(v);
-            vStartDate =  (Button) v.findViewById(R.id.textStartDate);
+            if (null!=v.findViewById(R.id.buttonCalendar)) {
+                vFabAddCal = (FloatingActionButton) v.findViewById(R.id.buttonCalendar);
+            }
+            if (null!=v.findViewById(R.id.textStartDate)) {
+                vStartDate = (Button) v.findViewById(R.id.textStartDate);
+            }
             vSprint = (TextView) v.findViewById(R.id.textSprint);
             vWeek = (TextView) v.findViewById(R.id.textWeek);
             vImasdMx1 = (TextView) v.findViewById(R.id.textImasdMx1);
@@ -245,6 +253,5 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
 
         }
     }
-
 
 }

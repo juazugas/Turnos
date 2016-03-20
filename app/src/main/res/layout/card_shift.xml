@@ -36,6 +36,21 @@
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+        <android.support.design.widget.FloatingActionButton
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/buttonCalendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp"
+            android:src="@android:drawable/ic_menu_today"
+            android:clickable="true"
+            fab:elevation="@dimen/elevation_low"
+            fab:backgroundTint="@android:color/white"
+            fab:fabSize="mini"
+            fab:rippleColor="@color/sa_green_semitrans"
+            />
         <Button
             android:id="@+id/textStartDate"
             android:layout_width="wrap_content"
@@ -53,8 +68,20 @@
             android:textColor="?android:attr/colorForegroundInverse"
             android:background="@drawable/oval_ripple"
             tools:text="29\nnov.\n2014"
+            tools:visibility="gone"
             android:elevation="@dimen/elevation_low"
-            android:stateListAnimator="@anim/button_elevation"/>
+            android:stateListAnimator="@anim/button_elevation"
+            android:visibility="gone"/>
+        <!--
+            android:id="@+id/textStartDate"
+            tools:text="29\nnov.\n2014"
+            android:textColor="?android:attr/colorForegroundInverse"
+            android:background="@drawable/oval_ripple"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:singleLine="false"
+            android:text="29-11-2014"
+            android:stateListAnimator="@anim/button_elevation"
+          -->
 
         <TextView
             android:text="MX1    +    MX2\nEU"
