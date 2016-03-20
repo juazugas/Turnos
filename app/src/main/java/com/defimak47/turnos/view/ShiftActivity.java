@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SyncStatusObserver;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,7 @@ import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import com.defimak47.turnos.R;
@@ -26,6 +29,7 @@ import com.defimak47.turnos.helpers.ShiftInfoHelper;
 import com.defimak47.turnos.model.Shift;
 import com.defimak47.turnos.model.ShiftInfo;
 import com.defimak47.turnos.model.ShiftRecord;
+import com.defimak47.turnos.prefs.PreferenceFacade;
 import com.defimak47.turnos.sync.TurnosSyncAdapter;
 import com.defimak47.turnos.utils.IOUtils;
 
@@ -175,6 +179,7 @@ public class ShiftActivity extends AppCompatActivity
         } else if (id == R.id.action_current) {
             scrollToShift();
         } else if (id == R.id.action_refresh) {
+            setRefreshActionButtonState(true);
             TurnosSyncAdapter.syncImmediately(this);
         }
 
@@ -204,8 +209,56 @@ public class ShiftActivity extends AppCompatActivity
     }
 
     @Override
+    public void onStart () {
+        super.onStart();
+    }
+
+    private void checkLocationStatus() {
+        // Check if there's error retrieving shift info
+        int status = PreferenceFacade.getLocationStatus(this);
+        if (status!=TurnosSyncAdapter.LOCATION_STATUS_OK) {
+            CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.layoutShift);
+            showLocationStatusMessage(layout, status);
+        }
+    }
+
+    private void showLocationStatusMessage(CoordinatorLayout layout, int status) {
+        String message = getLocationStatusMessage(this, status);
+        if (status == TurnosSyncAdapter.LOCATION_STATUS_INVALID || status == TurnosSyncAdapter.LOCATION_STATUS_UNKNOWN) {
+            Snackbar.make(layout, message, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.action_retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setRefreshActionButtonState(true);
+                            TurnosSyncAdapter.syncImmediately(ShiftActivity.this);
+                        }
+                    })
+                    .show();
+        } else {
+            Snackbar.make(layout, message, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    private String getLocationStatusMessage(Context context, int status) {
+        String message = null;
+        if (status== TurnosSyncAdapter.LOCATION_STATUS_OK) {
+            message = "Ok";
+        } else if (status==TurnosSyncAdapter.LOCATION_STATUS_SERVER_DOWN) {
+            message = context.getString(R.string.empty_stuff_list_server_down);
+        } else if (status==TurnosSyncAdapter.LOCATION_STATUS_SERVER_INVALID) {
+            message = context.getString(R.string.empty_stuff_list_server_error);
+        } else if (status==TurnosSyncAdapter.LOCATION_STATUS_INVALID) {
+            message = context.getString(R.string.empty_stuff_list_invalid_sheet);
+        } else { //if (status==TurnosSyncAdapter.LOCATION_STATUS_UNKNOWN) {
+            message = context.getString(R.string.empty_shifts_list);
+        }
+        return message;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        checkLocationStatus();
         mSyncStatusObserver.onStatusChanged(0);
 
         // Watch for sync state changes

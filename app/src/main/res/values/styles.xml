@@ -15,4 +15,8 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
+    <style name="AppTheme.FloatingAccentButtonOverlay" >
+        <item name="colorAccent">@android:color/background_light</item>
+    </style>
+
 </resources>
