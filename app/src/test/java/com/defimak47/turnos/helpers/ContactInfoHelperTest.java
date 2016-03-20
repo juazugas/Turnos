@@ -19,10 +19,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
+@Config(constants = BuildConfig.class, sdk = { 19, 21, 23 } )
 public class ContactInfoHelperTest {
 
     private static final String DUMMY_JSON = "[{\"login\":\"dummy\",\"name\":\"Dummy Dummie\",\"alias\":\"dum\",\"position\":\"Dummy Position\"},"+

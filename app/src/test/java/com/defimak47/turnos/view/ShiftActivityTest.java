@@ -9,7 +9,6 @@ import android.view.Menu;
 import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.R;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -20,14 +19,17 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
  * Created by jzuriaga on 11/04/15.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 21)
+@Config(constants = BuildConfig.class, sdk = {19, 21, 23})
 public class ShiftActivityTest {
 
 

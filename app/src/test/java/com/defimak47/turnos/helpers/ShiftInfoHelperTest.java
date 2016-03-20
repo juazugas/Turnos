@@ -7,7 +7,6 @@ import com.defimak47.turnos.R;
 import com.defimak47.turnos.model.ShiftInfo;
 import com.defimak47.turnos.utils.IsoDate;
 import com.defimak47.turnos.utils.NetworkUtils;
-import com.defimak47.turnos.view.MainActivity;
 import com.defimak47.turnos.view.ShiftActivity;
 
 import org.junit.Before;
@@ -24,22 +23,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Date;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
+@Config(constants = BuildConfig.class, sdk = { 19, 21, 23})
 public class ShiftInfoHelperTest {
 
     public static final String LINK_TO_SOURCE = "https://docs.google.com/spreadsheets/d/PUBLIC_KEY/pubhtml";

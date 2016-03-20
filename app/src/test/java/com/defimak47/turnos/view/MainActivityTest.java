@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
+@Config(constants = BuildConfig.class, sdk = {19, 21, 23})
 public class MainActivityTest {
 
     @Test
