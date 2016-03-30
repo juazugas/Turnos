@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -323,17 +322,11 @@ public class ShiftActivity extends AppCompatActivity
     }
 
     private void scrollToShift() {
-        if (!shifts.isEmpty()) {
+        ShiftAdapter shiftAdapter = (ShiftAdapter)recList.getAdapter();
+        if (!shifts.isEmpty() && shiftAdapter.getItemCount()>0) {
             int position = -1;
-            Calendar now = Calendar.getInstance();
-            int weekOfYear = now.get(Calendar.WEEK_OF_YEAR);
-            int year = now.get(Calendar.YEAR);
-            if (weekOfYear == 1 && now.get(Calendar.WEEK_OF_MONTH)>2) { // Its december last week of month
-                year = year + 1;
-            }
-            for (int i = 0 ; i<shifts.size(); i++) {
-                Shift shift = shifts.get(i);
-                if (shift.getWeek()==weekOfYear && shift.getYear()==year) {
+            for (int i = 0 ; i<shiftAdapter.getItemCount(); i++) {
+                if (shiftAdapter.getItemViewType(i) == ShiftAdapter.CURRENT_SHIFT) {
                     position = i;
                     break;
                 }

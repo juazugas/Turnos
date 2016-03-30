@@ -44,7 +44,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
     public static final String DATE_TITLE_TEMPLATE = "Start %s - End %s";
 
     public static final String CALENDAR_TITLE_TEMPLATE = "Turno Mx %s + %s. Week %d";
-    private static final int CURRENT_SHIFT = 1;
+    public static final int CURRENT_SHIFT = 1;
 
     public static long MILLIS_IN_HOUR =  60*60*1000;
 
@@ -191,7 +191,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
 
         this.shiftList = new ArrayList<>();
         for (Shift shift: this.allShifts) {
-            if (shiftMatches(shift, queryText)) {
+            if (shiftMatches(shift, queryText) || ShiftInfoHelper.isCurrentShift(shift)) {
                 this.shiftList.add(shift);
             }
         }
