@@ -2,19 +2,26 @@ package com.defimak47.turnos.view;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SyncRequest;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 
 import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.R;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.Implementation;
+import org.robolectric.annotation.Implements;
+import org.robolectric.shadows.ShadowContentResolver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +36,14 @@ import static org.robolectric.Shadows.shadowOf;
  * Created by jzuriaga on 11/04/15.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {19, 21, 23})
+@Config(constants = BuildConfig.class, sdk = 19)
 public class ShiftActivityTest {
 
+    @Before
+    public void setup() {
+        ContentResolver mockResolver =  RuntimeEnvironment.application.getContentResolver();
+        final ShadowContentResolver shadowContentResolver = shadowOf(mockResolver);
+    }
 
     @Test
     public void testActivityStart () {
@@ -82,5 +94,17 @@ public class ShiftActivityTest {
         assertEquals(menu.findItem(R.id.action_team).getTitle(),
                      activity.getString(R.string.action_team));
     }
+
+    /*
+    @Implements(value = ContentResolver.class)
+    private class ShadowContentResolver21 extends ShadowContentResolver {
+
+        @Implementation
+        public static void requestSync (SyncRequest request) {
+
+            ShadowContentResolver.requestSync(request.getAccount(), request.getProvider(), request.getExtras());
+        }
+    }
+    */
 
 }

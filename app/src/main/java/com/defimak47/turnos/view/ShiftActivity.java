@@ -172,9 +172,9 @@ public class ShiftActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id ==  R.id.action_team) {
-           goTeamActivity();
+            goTeamActivity();
         } else if (id == R.id.action_settings) {
-            return true;
+            goSettingsActivity();
         } else if (id == R.id.action_current) {
             scrollToShift();
         } else if (id == R.id.action_refresh) {
@@ -335,6 +335,14 @@ public class ShiftActivity extends AppCompatActivity
                 linearLayoutManager.scrollToPositionWithOffset(position, 20);
             }
         }
+    }
+
+    private void goSettingsActivity ( ) {
+        if (Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(new Explode());
+        }
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void goTeamActivity ( ) {

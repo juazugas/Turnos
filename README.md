@@ -11,8 +11,6 @@ Implementing the sync adapter, checks once a day content from internet.
 
 <h2>To Do</h2>
 
-- Show synchronization errors with snackbar pattern (http://www.materialdoc.com/snackbar/).
-- Check on start if the last synchro was unsuccessful, inform and then launch sync again.
 - Preferences activity with posibility of change (google document key identifier, period of synchronization, user identifier) and
   reading of preferences (last sync date, las sync status). Extra: show images in all shifts (boolean, default false), show month headers (boolean, default false),
   show previous shifts (boolean, default true).
@@ -42,6 +40,11 @@ fulano	Fulano Mengano Zutano	full	Sofware engineer<br/>
 waldo	Waldo Geraldo Faldo	wally	Sofware engineer<br/>
 
 <h2>Changes</h2>
+
+2016-05-01
+
+- Show synchronization errors with snackbar pattern (http://www.materialdoc.com/snackbar/).
+- Check on start if the last synchro failed, inform and then launch sync again.
 
 2016-03-13
 

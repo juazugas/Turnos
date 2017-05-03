@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.defimak47.turnos" android:versionCode="3" android:versionName="1.3.201601">
+    package="com.defimak47.turnos"
+    android:versionCode="3"
+    android:versionName="1.3.201601">
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -12,38 +14,38 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Permissions required by the sync adapter -->
-    <uses-permission
-        android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission
-        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission
-        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <!-- Required to register a SyncStatusObserver to display a "syncing..." progress indicator. -->
-    <uses-permission
-        android:name="android.permission.READ_SYNC_STATS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
 
+    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".view.MainActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".view.ShiftActivity">
-        </activity>
+            android:parentActivityName=".view.ShiftActivity"></activity>
         <activity
             android:name=".view.ShiftActivity"
             android:label="@string/title_activity_shift">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="@string/content_authority"
             android:name=".provider.StubProvider"
+            android:authorities="@string/content_authority"
             android:exported="false"
             android:syncable="true" />
         <!-- Turnos's dummy authentication service -->
@@ -51,6 +53,7 @@
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
@@ -58,17 +61,24 @@
         <!-- The SyncAdapter service -->
         <service
             android:name=".sync.TurnosSyncService"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
 
-
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".view.ShiftActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.defimak47.turnos.view.ShiftActivity" />
+        </activity>
     </application>
 
 </manifest>
