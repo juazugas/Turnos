@@ -9,7 +9,7 @@ import com.defimak47.turnos.R;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @see com.defimak47.turnos.view.SettingsActivity
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class SettingsActivityTest {
 
