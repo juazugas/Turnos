@@ -1,6 +1,7 @@
 package com.defimak47.turnos.helpers;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.R;
@@ -13,9 +14,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.res.Fs;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -63,10 +67,13 @@ public class ContactInfoHelperTest {
     }
 
     @Ignore
-    private InputStream getRawResourceInputStream () {
-        Activity activity = Robolectric.setupActivity(MainActivity.class);
-        assertNotNull(activity);
-        InputStream in = activity.getResources().openRawResource(R.raw.lusers);
+    private InputStream getRawResourceInputStream () throws IOException {
+        Context context = RuntimeEnvironment.application.getBaseContext();
+        assertNotNull(context);
+        InputStream in = context.getResources().openRawResource(R.raw.lusers);
+        if (null==in) {
+            in = Fs.fileFromPath("./app/build/intermediates/res/merged/debug/raw/lusers.json").getInputStream();
+        }
         assertNotNull(in);
         return in;
     }

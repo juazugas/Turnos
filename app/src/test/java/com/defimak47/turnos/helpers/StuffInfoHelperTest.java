@@ -1,10 +1,12 @@
 package com.defimak47.turnos.helpers;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.model.StuffInfo;
+import com.defimak47.turnos.shadows.FakeAppCompatActivity;
 import com.defimak47.turnos.utils.IsoDate;
 import com.defimak47.turnos.view.MainActivity;
 
@@ -14,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.res.Fs;
 
@@ -37,35 +40,35 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = { 19, 21, 23 })
+@Config(constants = BuildConfig.class, sdk = { 19, 21, 23 }, shadows = { FakeAppCompatActivity.class })
 public class StuffInfoHelperTest {
 
-    public static final String LINK_TO_SOURCE = "https://docs.google.com/spreadsheets/d/PUBLIC_KEY/pubhtml";
+    private static final String MY_TURNOS_GOOGLE_SHEET_KEY = BuildConfig.TURNOS_GOOGLE_SHEET_KEY;
+    public static final String LINK_TO_SOURCE = "https://docs.google.com/spreadsheets/d/"+MY_TURNOS_GOOGLE_SHEET_KEY+"/pubhtml";
     public static final String UPDATED        = "2015-09-29T08:53:38.068Z";
     public static final String AUTHOR_NAME    = "parent";
     public static final String AUTHOR_EMAIL   = "parent@example.com";
     public static final String HTTP_LINK_TO_SOURCE = "https://docs.google.com/spreadsheets/d/%s/pubhtml";
-    private static final String MY_TURNOS_GOOGLE_SHEET_KEY = BuildConfig.TURNOS_GOOGLE_SHEET_KEY;
 
     private static final String DUMMY_JSON =
             "{\"version\":\"1.0\",\"encoding\":\"UTF-8\",\"feed\":{\"xmlns\":\"http://www.w3.org/2005/Atom\"," +
              "\"xmlns$openSearch\":\"http://a9.com/-/spec/opensearchrss/1.0/\",\"xmlns$gsx\":\"http://schemas.google.com/spreadsheets/2006/extended\"," +
-             "\"id\":{\"$t\":\"https://spreadsheets.google.com/feeds/list/PUBLIC_KEY/o39u79f/public/full\"}," +
+             "\"id\":{\"$t\":\"https://spreadsheets.google.com/feeds/list/"+MY_TURNOS_GOOGLE_SHEET_KEY+"/o39u79f/public/full\"}," +
              "\"updated\":{\"$t\":\""+UPDATED+"\"},\"category\":[{\"scheme\":\"http://schemas.google.com/spreadsheets/2006\"," +
              "\"term\":\"http://schemas.google.com/spreadsheets/2006#list\"}],\"title\":{\"type\":\"text\",\"$t\":\"stuff\"},\"link\":[{\"rel\":\"alternate\"," +
              "\"type\":\"application/atom+xml\",\"href\":\""+ LINK_TO_SOURCE +"\"},{\"rel\":\"http://schemas.google.com/g/2005#feed\",\"type\":\"application/atom+xml\","+
-             "\"href\":\"https://spreadsheets.google.com/feeds/list/PUBLIC_KEY/o39u79f/public/full\"}]," +
+             "\"href\":\"https://spreadsheets.google.com/feeds/list/"+MY_TURNOS_GOOGLE_SHEET_KEY+"/o39u79f/public/full\"}]," +
              "\"author\":[{\"name\":{\"$t\":\"parent\"},\"email\":{\"$t\":\"parent@example.com\"}}],\"openSearch$totalResults\":{\"$t\":\"2\"}," +
-             "\"openSearch$startIndex\":{\"$t\":\"1\"},\"entry\":[{\"id\":{\"$t\":\"https://spreadsheets.google.com/feeds/list/PUBLIC_KEY/" +
+             "\"openSearch$startIndex\":{\"$t\":\"1\"},\"entry\":[{\"id\":{\"$t\":\"https://spreadsheets.google.com/feeds/list/"+MY_TURNOS_GOOGLE_SHEET_KEY+"/" +
              "39u79f/public/full/cokwr\"},\"updated\":{\"$t\":\"2015-09-29T08:53:38.068Z\"},\"category\":[{\"scheme\":\"http://schemas.google.com/spreadsheets/2006\"," +
              "\"term\":\"http://schemas.google.com/spreadsheets/2006#list\"}],\"title\":{\"type\":\"text\",\"$t\":\"dummy\"},\"content\":{\"type\":\"text\"," +
              "\"$t\":\"name: Dummy Dummie, alias: dummi, position: Dummy position\"},\"link\":[{\"rel\":\"self\",\"type\":\"application/atom+xml\"," +
-             "\"href\":\"https://spreadsheets.google.com/feeds/list/PUBLIC_KEY/o39u79f/public/full/cokwr\"}]," +
+             "\"href\":\"https://spreadsheets.google.com/feeds/list/"+MY_TURNOS_GOOGLE_SHEET_KEY+"/o39u79f/public/full/cokwr\"}]," +
              "\"gsx$login\":{\"$t\":\"dummy\"},\"gsx$name\":{\"$t\":\"Dummy Dummie\"},\"gsx$alias\":{\"$t\":\"dummi\"},\"gsx$position\":{\"$t\":\"Dummy position\"}}," +
-             "{\"id\":{\"$t\":\"https://spreadsheets.google.com/feeds/list/PUBLIC_KEY/o39u79f/public/full/cpzh4\"}," +
+             "{\"id\":{\"$t\":\"https://spreadsheets.google.com/feeds/list/"+MY_TURNOS_GOOGLE_SHEET_KEY+"/o39u79f/public/full/cpzh4\"}," +
              "\"updated\":{\"$t\":\"2015-09-29T08:53:38.068Z\"},\"category\":[{\"scheme\":\"http://schemas.google.com/spreadsheets/2006\",\"term\":\"http://schemas.google.com/" +
              "spreadsheets/2006#list\"}],\"title\":{\"type\":\"text\",\"$t\":\"redummy\"},\"content\":{\"type\":\"text\",\"$t\":\"name: Name Dummie, alias: red, position: Red position\"}," +
-             "\"link\":[{\"rel\":\"self\",\"type\":\"application/atom+xml\",\"href\":\"https://spreadsheets.google.com/feeds/list/PUBLIC_KEY/" +
+             "\"link\":[{\"rel\":\"self\",\"type\":\"application/atom+xml\",\"href\":\"https://spreadsheets.google.com/feeds/list/"+MY_TURNOS_GOOGLE_SHEET_KEY+"/" +
              "o39u79f/public/full/cpzh4\"}],\"gsx$login\":{\"$t\":\"redummy\"},\"gsx$name\":{\"$t\":\"Name Dummie\"},\"gsx$alias\":{\"$t\":\"red\"}," +
              "\"gsx$position\":{\"$t\":\"Red position\"}}]}}";
 
@@ -90,8 +93,6 @@ public class StuffInfoHelperTest {
         _expect: {
             assertNotNull(stuffinfo);
             assertEquals(lastupdated, stuffinfo.getLastupdated());
-            String httpLinkToSource = String.format(HTTP_LINK_TO_SOURCE, MY_TURNOS_GOOGLE_SHEET_KEY);
-            assertEquals(httpLinkToSource, stuffinfo.getLinkToSource());
             assertEquals("juazuri", stuffinfo.getAuthorName());
             assertEquals("juazuri@gmail.com", stuffinfo.getAuthorEmail());
             assertEquals(stuffinfo.getStuff().get(0).getLogin(), "sbellosta");
@@ -159,11 +160,11 @@ public class StuffInfoHelperTest {
 
     @Ignore
     private InputStream getRawResourceInputStream () throws IOException {
-        Activity activity = Robolectric.setupActivity(MainActivity.class);
-        assertNotNull(activity);
-        InputStream in = activity.getResources().openRawResource(R.raw.stuff);
+        Context context = RuntimeEnvironment.application.getBaseContext();
+        assertNotNull(context);
+        InputStream in = context.getResources().openRawResource(R.raw.stuff);
         if (null==in) {
-            in = Fs.fileFromPath("../app/build/intermediates/res/merged/debug/raw/stuff.json").getInputStream();
+            in = Fs.fileFromPath("./app/build/intermediates/res/merged/debug/raw/stuff.json").getInputStream();
         }
         assertNotNull(in);
         return in;

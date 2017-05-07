@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNotNull;
  *
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = { 19 })
+@Config(constants = BuildConfig.class, sdk = { 19, 21, 23 })
 public class PhotoInfoHelperTest {
 
     public static final String LINK_TO_SOURCE = "https://docs.google.com/spreadsheets/d/PUBLIC_KEY/pubhtml";

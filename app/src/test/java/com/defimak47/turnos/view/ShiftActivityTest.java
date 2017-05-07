@@ -10,6 +10,7 @@ import android.view.Menu;
 
 import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.R;
+import com.defimak47.turnos.shadows.FakeContentResolver;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,29 +37,30 @@ import static org.robolectric.Shadows.shadowOf;
  * Created by jzuriaga on 11/04/15.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 19)
+@Config(constants = BuildConfig.class, sdk = { 19, 21, 23 }, shadows = {FakeContentResolver.class})
 public class ShiftActivityTest {
 
     @Before
     public void setup() {
-        ContentResolver mockResolver =  RuntimeEnvironment.application.getContentResolver();
-        final ShadowContentResolver shadowContentResolver = shadowOf(mockResolver);
+//        ContentResolver mockResolver =  RuntimeEnvironment.application.getContentResolver();
+//        final ShadowContentResolver shadowContentResolver = shadowOf(mockResolver);
+
     }
 
     @Test
-    public void testActivityStart () {
+    public void testActivityStart() {
         Activity activity = Robolectric.setupActivity(ShiftActivity.class);
         assertNotNull(activity);
     }
 
     @Test
-    public void testActivityTitle () {
+    public void testActivityTitle() {
         Activity activity = Robolectric.setupActivity(ShiftActivity.class);
         assertEquals(activity.getTitle(), activity.getText(R.string.title_activity_shift));
     }
 
     @Test
-    public void testActivityIsShown () {
+    public void testActivityIsShown() {
         Activity activity = Robolectric.buildActivity(ShiftActivity.class).create().start().resume().visible().get();
         RecyclerView recList = (RecyclerView) activity.findViewById(R.id.shiftList);
         assertNotNull(recList);
@@ -66,7 +68,7 @@ public class ShiftActivityTest {
     }
 
     @Test
-    public void testActivityAccessRawResource () {
+    public void testActivityAccessRawResource() {
         Activity activity = Robolectric.setupActivity(ShiftActivity.class);
         assertNotNull(activity);
         InputStream in = activity.getResources().openRawResource(R.raw.turnos);
@@ -78,7 +80,7 @@ public class ShiftActivityTest {
     }
 
     @Test
-    public void testOnCreatePanelMenu () {
+    public void testOnCreatePanelMenu() {
         SearchManager searchManager = (SearchManager) RuntimeEnvironment.application.getSystemService(Context.SEARCH_SERVICE);
         assertNotNull(searchManager);
     }
@@ -90,21 +92,9 @@ public class ShiftActivityTest {
         final Menu menu = shadowOf(activity).getOptionsMenu();
         assertNotNull(menu);
         assertEquals(menu.findItem(R.id.action_settings).getTitle(),
-                     activity.getString(R.string.action_settings));
+                activity.getString(R.string.action_settings));
         assertEquals(menu.findItem(R.id.action_team).getTitle(),
-                     activity.getString(R.string.action_team));
+                activity.getString(R.string.action_team));
     }
-
-    /*
-    @Implements(value = ContentResolver.class)
-    private class ShadowContentResolver21 extends ShadowContentResolver {
-
-        @Implementation
-        public static void requestSync (SyncRequest request) {
-
-            ShadowContentResolver.requestSync(request.getAccount(), request.getProvider(), request.getExtras());
-        }
-    }
-    */
 
 }

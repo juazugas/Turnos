@@ -4,18 +4,25 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Looper;
 
+import com.defimak47.turnos.BuildConfig;
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.model.Shift;
+import com.defimak47.turnos.shadows.FakeContentResolver;
 import com.defimak47.turnos.view.ShiftActivity;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+import org.robolectric.res.Fs;
 import org.robolectric.shadows.ShadowLooper;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -28,6 +35,8 @@ import static org.robolectric.Shadows.shadowOf;
 /**
  * Created by jzuriaga on 02/05/15.
  */
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = { 19, 21, 23}, shadows = {FakeContentResolver.class})
 public class ShiftHelperTest {
 
     public static final String DUMMY_JSON =
@@ -75,10 +84,13 @@ public class ShiftHelperTest {
     }
 
     @Ignore
-    private InputStream getRawResourceInputStream () {
-        ShiftActivity activity = Robolectric.buildActivity(ShiftActivity.class).create().get();
-        assertNotNull(activity);
-        InputStream in = activity.getResources().openRawResource(R.raw.turnos);
+    private InputStream getRawResourceInputStream () throws IOException{
+        Context context = RuntimeEnvironment.application.getBaseContext();
+        assertNotNull(context);
+        InputStream in = context.getResources().openRawResource(R.raw.turnos);
+        if (null==in) {
+            in = Fs.fileFromPath("./app/build/intermediates/res/merged/debug/raw/turnos.json").getInputStream();
+        }
         assertNotNull(in);
         return in;
     }
