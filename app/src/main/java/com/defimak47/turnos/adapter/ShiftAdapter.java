@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.helpers.ContactInfoHelper;
+import com.defimak47.turnos.helpers.ImageResourceHelper;
 import com.defimak47.turnos.helpers.ShiftInfoHelper;
 import com.defimak47.turnos.model.Shift;
 import com.koushikdutta.async.future.FutureCallback;
@@ -52,10 +53,13 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
     private List<Shift> shiftList;
     private final List<Shift> allShifts;
 
+    private ImageResourceHelper imageResourceHelper;
+
     public ShiftAdapter(Context context, List<Shift> shiftList) {
         this.context = context;
         this.shiftList = shiftList;
         this.allShifts = new ArrayList<>(shiftList);
+        imageResourceHelper = new ImageResourceHelper(context);
     }
 
     @Override
@@ -78,42 +82,9 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ShiftViewHol
         }
         if (viewType==CURRENT_SHIFT) {
             shiftViewHolder.vStartDate.setText(getDateTitle(shift.getStartDate()));
-            Ion.with(getContext())
-                    .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdEu()))
-                    .setLogging("onBindViewHolder", Log.INFO)
-                    .asBitmap()
-                    .setCallback(new FutureCallback<Bitmap>() {
-                        @Override
-                        public void onCompleted(Exception e, Bitmap result) {
-                            if (null==e) {
-                                shiftViewHolder.vImageImasdEu.setImageBitmap(result);
-                            }
-                        }
-                    });
-            Ion.with(getContext())
-                    .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdMx1()))
-                    .setLogging("onBindViewHolder", Log.INFO)
-                    .asBitmap()
-                    .setCallback(new FutureCallback<Bitmap>() {
-                        @Override
-                        public void onCompleted(Exception e, Bitmap result) {
-                            if (null==e) {
-                                shiftViewHolder.vImageImasdMx1.setImageBitmap(result);
-                            }
-                        }
-                    });
-            Ion.with(getContext())
-                    .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, shift.getImasdMx2()))
-                    .setLogging("onBindViewHolder", Log.INFO)
-                    .asBitmap()
-                    .setCallback(new FutureCallback<Bitmap>() {
-                        @Override
-                        public void onCompleted(Exception e, Bitmap result) {
-                            if (null==e) {
-                                shiftViewHolder.vImageImasdMx2.setImageBitmap(result);
-                            }
-                        }
-                    });
+            shiftViewHolder.vImageImasdEu.setImageBitmap(imageResourceHelper.getImageResource(shift.getImasdEu()));
+            shiftViewHolder.vImageImasdMx1.setImageBitmap(imageResourceHelper.getImageResource(shift.getImasdMx1()));
+            shiftViewHolder.vImageImasdMx2.setImageBitmap(imageResourceHelper.getImageResource(shift.getImasdMx2()));
         } else {
             View view = (null!=shiftViewHolder.vFabAddCal) ? shiftViewHolder.vFabAddCal : shiftViewHolder.vStartDate;
             shiftViewHolder.vStartDate.setText(DateFormat.format(BTN_DATE_FORMAT_PATTERN, shift.getStartDate()));

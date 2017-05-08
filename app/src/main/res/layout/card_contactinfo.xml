@@ -19,16 +19,16 @@
             android:id="@+id/imImage"
             android:layout_width="@dimen/card_contact_image_width"
             android:layout_height="@dimen/card_contact_image_height"
-            android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="6dp"
-            android:src="@drawable/jzuriaga"
             android:padding="3dp"
+            android:src="@drawable/portrait"
             app:civ_border="true"
             app:civ_borderWidth="1dp"
             app:civ_shadow="true"
-            app:civ_shadowColor="@color/sa_green_transparent"/>
+            app:civ_shadowColor="@color/sa_green_transparent" />
 
 
         <TextView

@@ -27,6 +27,7 @@ public class StuffInfoHelper extends AbstractBaseHelper<StuffInfo> {
 
     public static final String JSON_ATOM_ENTRY_LOGIN_KEY = "gsx$login";
     public static final String JSON_ATOM_ENTRY_ALIAS_KEY = "gsx$alias";
+    public static final String JSON_ATOM_ENTRY_URL_KEY = "gsx$url";
     public static final String JSON_ATOM_ENTRY_NAME_KEY = "gsx$name";
     public static final String JSON_ATOM_ENTRY_POSITION_KEY = "gsx$position";
 
@@ -72,6 +73,8 @@ public class StuffInfoHelper extends AbstractBaseHelper<StuffInfo> {
                 record.setLogin(getTextAsString(reader));
             } else if (TextUtils.equals(name, JSON_ATOM_ENTRY_ALIAS_KEY)) {
                 record.setAlias(getTextAsString(reader));
+            } else if (TextUtils.equals(name, JSON_ATOM_ENTRY_URL_KEY)) {
+                record.setUrl(getTextAsString(reader));
             } else if (TextUtils.equals(name, JSON_ATOM_ENTRY_NAME_KEY)) {
                 record.setName(getTextAsString(reader));
             } else if (TextUtils.equals(name, JSON_ATOM_ENTRY_POSITION_KEY)) {

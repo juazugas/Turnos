@@ -57,18 +57,17 @@
             android:id="@+id/imImasdEu"
             android:layout_width="@dimen/card_shift_image_width"
             android:layout_height="@dimen/card_shift_image_height"
-            android:layout_below="@+id/textWeek"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="8dp"
+            android:layout_below="@+id/textWeek"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/fsantonja"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:padding="3dp"
+            android:src="@drawable/portrait"
             app:civ_border="true"
             app:civ_borderWidth="1dp"
             app:civ_shadow="true"
-            app:civ_shadowColor="@color/sa_green_transparent"
-            />
+            app:civ_shadowColor="@color/sa_green_transparent" />
 
         <TextView
             android:id="@+id/textImasdEu"
@@ -92,16 +91,15 @@
             android:layout_height="@dimen/card_shift_image_height"
             android:layout_below="@+id/textWeek"
             android:layout_centerInParent="true"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/rtribaldos"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:padding="3dp"
+            android:src="@drawable/portrait"
             app:civ_border="true"
             app:civ_borderWidth="1dp"
             app:civ_shadow="true"
-            app:civ_shadowColor="@color/sa_green_transparent"
-            />
+            app:civ_shadowColor="@color/sa_green_transparent" />
 
         <TextView
             android:id="@+id/textImasdMx1"
@@ -124,18 +122,17 @@
             android:id="@+id/imImasdMx2"
             android:layout_width="@dimen/card_shift_image_width"
             android:layout_height="@dimen/card_shift_image_height"
-            android:layout_below="@+id/textWeek"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="8dp"
+            android:layout_below="@+id/textWeek"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/jzuriaga"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:padding="3dp"
+            android:src="@drawable/portrait"
             app:civ_border="true"
             app:civ_borderWidth="1dp"
             app:civ_shadow="true"
-            app:civ_shadowColor="@color/sa_green_transparent"
-            />
+            app:civ_shadowColor="@color/sa_green_transparent" />
 
         <TextView
             android:id="@+id/textImasdMx2"

@@ -15,6 +15,7 @@ public class ContactInfo {
     protected String email;
     protected String position;
     protected String alias;
+    protected String url;
 
     public String getAlias() {
         return alias;
@@ -75,10 +76,19 @@ public class ContactInfo {
         this.login = login;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public static class Projection {
         public static final String NAME = "name";
         public static final String LOGIN = "login";
         public static final String ALIAS = "alias";
+        public static final String URL = "url";
         public static final String POSITION = "position";
         public static final String EMAIL = "email";
     }

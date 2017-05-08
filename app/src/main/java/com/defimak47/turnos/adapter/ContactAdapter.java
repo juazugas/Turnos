@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.defimak47.turnos.R;
 import com.defimak47.turnos.helpers.ContactInfoHelper;
+import com.defimak47.turnos.helpers.ImageResourceHelper;
 import com.defimak47.turnos.model.ContactInfo;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -27,6 +28,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     private Context context;
     private List<ContactInfo> contactList;
 
+    private ImageResourceHelper imageHelper;
+
     public ContactAdapter(Context context, List<ContactInfo> contactList) {
         this.context = context;
         this.contactList = contactList;
@@ -35,6 +38,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         } else {
             itemLongClickListener = null;
         }
+        imageHelper = new ImageResourceHelper(context);
     }
 
     @Override
@@ -50,18 +54,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         contactViewHolder.vEmail.setText(ci.getEmail());
         contactViewHolder.vTitle.setText(ci.getAlias());
         contactViewHolder.vTitle.setTag(ci.getLogin());
-        Ion.with(getContext())
-           .load(String.format(ContactInfoHelper.HTTP_IMAGE_URI_TEMPLATE, ci.getLogin()))
-           .setLogging("onBindViewHolder", Log.INFO)
-           .asBitmap()
-           .setCallback(new FutureCallback<Bitmap>() {
-               @Override
-               public void onCompleted(Exception e, Bitmap result) {
-                   if (null==e) {
-                       contactViewHolder.vImage.setImageBitmap(result);
-                   }
-               }
-           });
+        imageHelper.loadImageResource(ci.getLogin(), ci.getUrl(), contactViewHolder.vImage);
     }
 
     @Override
